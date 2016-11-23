@@ -56,7 +56,7 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     # sort different types of messages
                     message = messaging_event["message"]
-                    gender = 'male'
+                    gender = 'female'
                     age = 20
                     sid = None
                     if message.get("text"): # get message
