@@ -271,16 +271,27 @@ def init_buttom_template(sender_id):
                     "template_type":"button",
                     "text": welcome_message,
                     "buttons":[
-                        {
-                        'type': 'postback',
-                        'title': 'Symptom checker',
-                        'payload': 'In order to properly help you, I will need to ask you a few questions. What symptoms do you have?'
-                        },
-                        {
-                        'type': 'postback',
-                        'title': 'Health alerts',
-                        'payload': 'Which diseases and/or symptoms would you like to check in your local area?'
-                        }
+#                        {
+#                        'type': 'postback',
+#                        'title': 'Symptom checker',
+#                        'payload': 'In order to properly help you, I will need to ask you a few questions. What symptoms do you have?'
+#                        },
+#                        {
+#                        'type': 'postback',
+#                        'title': 'Health alerts',
+#                        'payload': 'Which diseases and/or symptoms would you like to check in your local area?'
+#                        }
+                               {
+                               "type":"web_url",
+                               "url":"https://petersapparel.parseapp.com",
+                               "title":"Show Website"
+                               },
+                               {
+                               "type":"postback",
+                               "title":"Start Chatting",
+                               "payload":"USER_DEFINED_PAYLOAD"
+                               }
+
                     ]
                 }
             }
