@@ -224,7 +224,7 @@ def init_buttom_template(sender_id):
 
     # get user info
     r = requests.get('https://graph.facebook.com/v2.6/'+sender_id+
-        '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token='
+        '?fields=first_name,last_name,locale,timezone,gender&access_token='
         +os.environ["PAGE_ACCESS_TOKEN"])
     try:
         first_name = str(r.json()["first_name"])
@@ -238,10 +238,10 @@ def init_buttom_template(sender_id):
         gender = str(r.json()["gender"])
     except:
         gender = ""
-    try:
-        profile_pic = str(r.json()["profile_pic"])
-    except:
-        profile_pic = ""
+        #try:
+        #profile_pic = str(r.json()["profile_pic"])
+        #except:
+#profile_pic = ""
 
     welcome_message = "Hello! How may I help you?"
     if gender is not "":
