@@ -56,7 +56,7 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     # sort different types of messages
                     message = messaging_event["message"]
-                    gender = 'female'
+                    gender = 'male'
                     age = 20
                     sid = None
                     if message.get("text"): # get message
@@ -140,7 +140,7 @@ def webhook():
                                 longitudes.append(venues[x]["location"]["lng"])
                             message = "Location: " + str(latitude) + ", " + str(longitude)
 
-                            mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key=AIzaSyB1CFi3ImDxL21QTu7EN2e-RvP2LPAJgiY&size=800x800"
+                            mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key=AIzaSyBwJxBRpzx10gHVn1V1m2Cksbs8v1pQEQA&size=800x800"
                             for y in range(0,maxi):
                                 mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
                             send_message(sender_id, "And here they are on a map :)")
