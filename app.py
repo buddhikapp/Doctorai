@@ -14,7 +14,7 @@ from flask import Flask, request
 import infermedica_api
 
 api = infermedica_api.API(app_id='aaccd529', app_key='2507fff3b3104d61bca7f4eb7511dc7b')
-print(api.info())
+#print(api.info())
 
 app = Flask(__name__)
 
