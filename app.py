@@ -47,8 +47,11 @@ def webhook():
 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+                    log("sender_id : " + sender_id)
                     recipient_id = messaging_event["recipient"]["id"]
+                    log("recipient_id : " + recipient_id)
                     message = messaging_event["postback"]["payload"]
+                    log("message : " + message)
                     send_message(sender_id, message)
 
                 elif messaging_event.get("message"):  # someone sent us a message
