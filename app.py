@@ -72,7 +72,7 @@ def webhook():
                             search_result = search.search_symtom_limit(message, 5)
                             for i in range(len(search_result)):
                                 log(str(i) + " " + str(search_result[i]))
-                            my_dict = json.loads(str(search_result[0]))
+                            my_dict = json.loads(str(search_result))
                             log("----- : "+ my_dict[0])
 
                                            #sid = str(search_result[0])
