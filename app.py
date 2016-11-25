@@ -223,7 +223,7 @@ def send_message(sender_id, message_text):
 def init_buttom_template(sender_id):
 
     # get user info
-    r = requests.get('https://graph.facebook.com/v2.6/'+sender_id+
+    r = requests.get('https://graph.facebook.com/v2.8/'+sender_id+
         '?fields=first_name,last_name,locale,timezone,gender&access_token='
         +os.environ["PAGE_ACCESS_TOKEN"])
     try:
@@ -238,10 +238,10 @@ def init_buttom_template(sender_id):
         gender = str(r.json()["gender"])
     except:
         gender = ""
-        #try:
-        #profile_pic = str(r.json()["profile_pic"])
-        #except:
-#profile_pic = ""
+    try:
+        profile_pic = str(r.json()["profile_pic"])
+    except:
+        profile_pic = ""
 
     welcome_message = "Hello! How may I help you?"
     if gender is not "":
@@ -297,7 +297,7 @@ def init_buttom_template(sender_id):
             }
         }
     })
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
