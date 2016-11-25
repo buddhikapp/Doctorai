@@ -69,7 +69,7 @@ def webhook():
                             init_buttom_template(sender_id)
                         else:
                             send_message(sender_id, "Give me a sec!")
-                            search_result = search.search_symtom_limit(message, 1)
+                            search_result = search.search_symtom_limit(message, 5)
                             for w in search_result:
                                 log(w)
                             sid = search_result[0]["id"]
