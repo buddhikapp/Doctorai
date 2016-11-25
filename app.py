@@ -67,7 +67,7 @@ def webhook():
                         message = message["text"]
                         if message == "DoctorBot":
                             init_buttom_template(sender_id)
-                        else
+                        else:
                             send_message(sender_id, "Give me a sec!")
                             search_result = search.search_symtom(message)
                             log(search_result)
