@@ -69,10 +69,10 @@ def webhook():
                             init_buttom_template(sender_id)
                         else:
                             send_message(sender_id, "Give me a sec!")
-                            search_result = search.search_symtom(message)
-                            #log("search result : " + search_result)
+                            search_result = search.search_symtom_limit(message, 1)
                             for w in search_result:
                                 log(w)
+                            sid = search_result[0]["id"]
                                 #send_message(sender_id,search_result)
 #                        elif string.find(message,"headache") is not -1:
 #                            sid = diagnose.searchSymptom("headache", sender_id)
@@ -102,11 +102,11 @@ def webhook():
 #                                send_message(sender_id, response)
 #
 #
-#                        global diagnosis, symptom
-#                        if diagnosis is None and sid is not None:
-#                            diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
-#                            symptom = str(diagnosis.question.items[0]["id"])
-#                            send_message(sender_id, str(diagnosis.question.text))
+                        global diagnosis, symptom
+                        if diagnosis is None and sid is not None:
+                            diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
+                            symptom = str(diagnosis.question.items[0]["id"])
+                            send_message(sender_id, str(diagnosis.question.text))
 
 
                     # if message.get("text"): # get message
