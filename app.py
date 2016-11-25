@@ -73,9 +73,9 @@ def webhook():
 #                            for i in range(len(search_result)):
 #                                log(str(i) + " " + str(search_result[i]))
                             log(search_result)
-                            if len(search_result) > 0:
-                                my_dict = json.loads(str(search_result))
-                                log("----- : "+ my_dict[0])
+#                            if len(search_result) > 0:
+#                                my_dict = json.loads(str(search_result))
+#                                log("----- : "+ my_dict[0])
 
                                            #sid = str(search_result[0])
                                 #send_message(sender_id,search_result)
