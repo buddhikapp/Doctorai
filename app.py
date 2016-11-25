@@ -7,6 +7,7 @@ import apiai
 import sqlite3
 import string
 import diagnose
+import search
 import urllib, json
 from flask import Flask, request
 
@@ -66,40 +67,45 @@ def webhook():
                         message = message["text"]
                         if message == "DoctorBot":
                             init_buttom_template(sender_id)
-                        elif string.find(message,"headache") is not -1:
-                            sid = diagnose.searchSymptom("headache", sender_id)
+                        else
                             send_message(sender_id, "Give me a sec!")
-                        elif string.find(message,"fever") is not -1:
-                            sid= diagnose.searchSymptom("fever", sender_id)
-                            send_message(sender_id, "Give me a sec!")
-                        elif string.find(message,"knee") is not -1:
-                            sid = diagnose.searchSymptom("knee pain", sender_id)
-                            send_message(sender_id, "Give me a sec!")
+                            search_result = search.search_symtom(message)
+                            log(search_result)
+                            send_message(sender_id,search_result)
+#                        elif string.find(message,"headache") is not -1:
+#                            sid = diagnose.searchSymptom("headache", sender_id)
+#                            send_message(sender_id, "Give me a sec!")
+#                        elif string.find(message,"fever") is not -1:
+#                            sid= diagnose.searchSymptom("fever", sender_id)
+#                            send_message(sender_id, "Give me a sec!")
+#                        elif string.find(message,"knee") is not -1:
+#                            sid = diagnose.searchSymptom("knee pain", sender_id)
+#                            send_message(sender_id, "Give me a sec!")
 
-                        if symptom is not None:
-                            if string.find(message,str(diagnosis.question.items[0]["choices"][0]["label"])) is not -1:
-                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][0]["id"]))
-                            elif string.find(message,str(diagnosis.question.items[0]["choices"][1]["label"])) is not -1:
-                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][1]["id"]))
-                            else:
-                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][2]["id"]))
-                            if diagnosis.conditions[0]["probability"] > 0.25:
-                                send_message(sender_id, "I suspect "+str(diagnosis.conditions[0]["name"])+" with a probability of "+str(diagnosis.conditions[0]["probability"]))
-                                send_message(sender_id, "Please send me your location so I can find a doctor near you")
-                            else:
-                                symptom = str(diagnosis.question.items[0]["id"])
-                                response = str(diagnosis.question.text)
-                                for x in diagnosis.question.items[0]["choices"]:
-                                    response = response + "\n - " + str(x["label"])
-                                send_message(sender_id, response)
+#                        if symptom is not None:
+#                            if string.find(message,str(diagnosis.question.items[0]["choices"][0]["label"])) is not -1:
+#                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][0]["id"]))
+#                            elif string.find(message,str(diagnosis.question.items[0]["choices"][1]["label"])) is not -1:
+#                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][1]["id"]))
+#                            else:
+#                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][2]["id"]))
+#                            if diagnosis.conditions[0]["probability"] > 0.25:
+#                                send_message(sender_id, "I suspect "+str(diagnosis.conditions[0]["name"])+" with a probability of "+str(diagnosis.conditions[0]["probability"]))
+#                                send_message(sender_id, "Please send me your location so I can find a doctor near you")
+#                            else:
+#                                symptom = str(diagnosis.question.items[0]["id"])
+#                                response = str(diagnosis.question.text)
+#                                for x in diagnosis.question.items[0]["choices"]:
+#                                    response = response + "\n - " + str(x["label"])
+#                                send_message(sender_id, response)
+#
+#
+#                        global diagnosis, symptom
+#                        if diagnosis is None and sid is not None:
+#                            diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
+#                            symptom = str(diagnosis.question.items[0]["id"])
+#                            send_message(sender_id, str(diagnosis.question.text))
 
-
-                        global diagnosis, symptom
-                        if diagnosis is None and sid is not None:
-                            diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
-                            symptom = str(diagnosis.question.items[0]["id"])
-                            send_message(sender_id, str(diagnosis.question.text))
-                        
 
                     # if message.get("text"): # get message
                     #     message = message["text"]
