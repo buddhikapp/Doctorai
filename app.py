@@ -13,7 +13,7 @@ from flask import Flask, request
 
 import infermedica_api
 
-api = infermedica_api.API(app_id='aaccd529', app_key='2507fff3b3104d61bca7f4eb7511dc7b')
+api = infermedica_api.API(app_id='3f04e922', app_key='9a83e803469c7eaad27e9067249a3814')
 #print(api.info())
 
 app = Flask(__name__)
