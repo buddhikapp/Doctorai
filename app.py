@@ -70,8 +70,9 @@ def webhook():
                         else:
                             send_message(sender_id, "Give me a sec!")
                             search_result = search.search_symtom_limit(message, 5)
-                            for i in range(len(search_result)):
-                                log(str(i) + " " + str(search_result[i]))
+#                            for i in range(len(search_result)):
+#                                log(str(i) + " " + str(search_result[i]))
+                            log(search_result)
                             if len(search_result) > 0:
                                 my_dict = json.loads(str(search_result))
                                 log("----- : "+ my_dict[0])
