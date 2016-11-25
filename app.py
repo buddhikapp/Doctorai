@@ -73,7 +73,7 @@ def webhook():
                             for w in search_result:
                                 log(w)
                             else:
-                            sid = search_result[0][1]
+                            sid = str(search_result[0][1])
                                 #send_message(sender_id,search_result)
 #                        elif string.find(message,"headache") is not -1:
 #                            sid = diagnose.searchSymptom("headache", sender_id)
