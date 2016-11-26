@@ -17,7 +17,7 @@ api = infermedica_api.API(app_id='3f04e922', app_key='9a83e803469c7eaad27e906724
 #print(api.info())
 
 app = Flask(__name__)
-
+global diagnosis, symptom
 symptom_mode = False
 symptom = None
 gender = None
@@ -95,7 +95,7 @@ def webhook():
 #                                send_message(sender_id, response)
 #
 #
-                        global diagnosis, symptom
+
                         if diagnosis is None and sid is not None:
                             diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
                             log("-----diagnosis------ " + str(diagnosis))
