@@ -70,24 +70,12 @@ def webhook():
                         else:
                             send_message(sender_id, "Give me a sec!")
                             search_result = search.search_symtom_limit(message, 5)
-#                            for i in range(len(search_result)):
-#                                log(str(i) + " " + str(search_result[i]))
                             log("----------- " + str(search_result))
                             if len(search_result) > 0:
                                 sid = str(search_result[0]["id"])
                                 log("************ " + sid)
-#                                send_message(sender_id,search_result)
 
-                                    
-#                        elif string.find(message,"headache") is not -1:
-#                            sid = diagnose.searchSymptom("headache", sender_id)
-#                            send_message(sender_id, "Give me a sec!")
-#                        elif string.find(message,"fever") is not -1:
-#                            sid= diagnose.searchSymptom("fever", sender_id)
-#                            send_message(sender_id, "Give me a sec!")
-#                        elif string.find(message,"knee") is not -1:
-#                            sid = diagnose.searchSymptom("knee pain", sender_id)
-#                            send_message(sender_id, "Give me a sec!")
+
 
 #                        if symptom is not None:
 #                            if string.find(message,str(diagnosis.question.items[0]["choices"][0]["label"])) is not -1:
@@ -112,7 +100,10 @@ def webhook():
                             diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
                             log("-----diagnosis------ " + str(diagnosis))
                             symptom = str(diagnosis.question.items[0]["id"])
-                            send_message(sender_id, str(diagnosis.question.text))
+                            response = str(diagnosis.question.text)
+                            for x in diagnosis.question.items[0]["choices"]:
+                                response = response + "\n - " + str(x["label"])
+                            send_message(sender_id, response)
 
 
                     # if message.get("text"): # get message
