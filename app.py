@@ -17,7 +17,7 @@ api = infermedica_api.API(app_id='3f04e922', app_key='9a83e803469c7eaad27e906724
 #print(api.info())
 
 app = Flask(__name__)
-global diagnosis, symptom
+
 symptom_mode = False
 symptom = None
 gender = None
@@ -41,6 +41,8 @@ def webhook():
     # endpoint for processing incoming messaging events
     data = request.get_json()
     log(data)  # you may not want to log every incoming message in production, but it's good for testing
+
+global diagnosis, symptom
 
     if data["object"] == "page":
         for entry in data["entry"]:
