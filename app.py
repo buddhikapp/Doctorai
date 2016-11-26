@@ -42,7 +42,7 @@ def webhook():
     data = request.get_json()
     log(data)  # you may not want to log every incoming message in production, but it's good for testing
 
-global diagnosis, symptom
+
 
     if data["object"] == "page":
         for entry in data["entry"]:
@@ -97,7 +97,7 @@ global diagnosis, symptom
 #                                send_message(sender_id, response)
 #
 #
-
+                        global diagnosis, symptom
                         if diagnosis is None and sid is not None:
                             diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
                             log("-----diagnosis------ " + str(diagnosis))
