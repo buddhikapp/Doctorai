@@ -86,8 +86,10 @@ def webhook():
                                 diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][0]["id"]))
                             elif string.find(message,str(diagnosis.question.items[0]["choices"][1]["label"])) is not -1:
                                 diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][1]["id"]))
-                            else:
+                            elif string.find(message,str(diagnosis.question.items[0]["choices"][2]["label"])) is not -1:
                                 diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][2]["id"]))
+                            else:
+                                send_message(sender_id, "Sorry, I didn't get that. Please enter your answer again.")
                             if diagnosis.conditions[0]["probability"] > 0.25:
                                 send_message(sender_id, "I suspect "+str(diagnosis.conditions[0]["name"])+" with a probability of "+str(diagnosis.conditions[0]["probability"]))
                                 send_message(sender_id, "Please send me your location so I can find a doctor near you")
