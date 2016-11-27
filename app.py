@@ -82,11 +82,11 @@ def webhook():
 
 
                         if symptom is not None:
-                            if string.find(message,str(diagnosis.question.items[0]["choices"][0]["label"])) is not -1:
+                            if string.find(message.upper(),str(diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
                                 diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][0]["id"]))
-                            elif string.find(message,str(diagnosis.question.items[0]["choices"][1]["label"])) is not -1:
+                            elif string.find(message.upper(),str(diagnosis.question.items[0]["choices"][1]["label"]).upper()) is not -1:
                                 diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][1]["id"]))
-                            elif string.find(message,str(diagnosis.question.items[0]["choices"][2]["label"])) is not -1:
+                            elif string.find(message.upper(),str(diagnosis.question.items[0]["choices"][2]["label"]).upper()) is not -1:
                                 diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][2]["id"]))
                             else:
                                 send_message(sender_id, "Sorry, I didn't get that. Please enter your answer again.")
