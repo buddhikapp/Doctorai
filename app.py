@@ -68,6 +68,10 @@ def webhook():
                     if message.get("text"): # get message
                         message = message["text"]
                         if message == "DoctorBot":
+                            symptom = None
+                            gender = None
+                            age = None
+                            diagnosis = None
                             init_buttom_template(sender_id)
                         elif symptom is None:
                             send_message(sender_id, "Give me a sec!")
@@ -89,7 +93,6 @@ def webhook():
                             if diagnosis.conditions[0]["probability"] > 0.25:
                                 send_message(sender_id, "I suspect "+str(diagnosis.conditions[0]["name"])+" with a probability of "+str(diagnosis.conditions[0]["probability"]))
                                 send_message(sender_id, "Please send me your location so I can find a doctor near you")
-                                symptom_mode = False
                                 symptom = None
                                 gender = None
                                 age = None
