@@ -107,7 +107,7 @@ def webhook():
                                 diagnosis = None
                             else:
                                 symptom = str(diagnosis.question.items[0]["id"])
-                                response = str(diagnosis.question.text.encode('utf8'))
+                                response = str(diagnosis.question.text)
                                 if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
                                     response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                 for x in diagnosis.question.items[0]["choices"]:
@@ -121,7 +121,7 @@ def webhook():
                             diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
                             log("-----diagnosis------ " + str(diagnosis))
                             symptom = str(diagnosis.question.items[0]["id"])
-                            response = str(diagnosis.question.text.encode('utf8'))
+                            response = str(diagnosis.question.text)
                             if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
                                 response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                             for x in diagnosis.question.items[0]["choices"]:
