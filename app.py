@@ -101,6 +101,7 @@ def webhook():
                                 for x in diagnosis.question.items[0]["choices"]:
                                     response = response + "\n - " + str(x["label"])
                                 send_message(sender_id, response)
+                            log("-----diagnosis------ " + str(diagnosis))
 
 
                         global diagnosis, symptom
