@@ -89,6 +89,11 @@ def webhook():
                             if diagnosis.conditions[0]["probability"] > 0.25:
                                 send_message(sender_id, "I suspect "+str(diagnosis.conditions[0]["name"])+" with a probability of "+str(diagnosis.conditions[0]["probability"]))
                                 send_message(sender_id, "Please send me your location so I can find a doctor near you")
+                                symptom_mode = False
+                                symptom = None
+                                gender = None
+                                age = None
+                                diagnosis = None
                             else:
                                 symptom = str(diagnosis.question.items[0]["id"])
                                 response = str(diagnosis.question.text)
