@@ -104,7 +104,7 @@ def webhook():
                                 if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
                                     response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                 for x in diagnosis.question.items[0]["choices"]:
-                                    response = response + "\n - " + str(x["label"].encode('utf8'))
+                                    response = response + "\n - " + str(x["label"])
                                 send_message(sender_id, response)
                             log("-----diagnosis------ " + str(diagnosis))
 
@@ -118,7 +118,7 @@ def webhook():
                             if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
                                 response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                             for x in diagnosis.question.items[0]["choices"]:
-                                response = response + "\n - " + str(x["label"].encode('utf8'))
+                                response = response + "\n - " + str(x["label"])
                             send_message(sender_id, response)
 
 
