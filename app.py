@@ -172,8 +172,8 @@ def webhook():
                             send_message(sender_id, mapurl)
                         elif attach["type"] == "image":
                             image_url = attach["payload"]["url"]
-                            message = "Image url: " + image_url
-                            send_message(sender_id, message)
+                            message = image_url
+                            send_message_image(sender_id, message)
 
 
                 # if messaging_event.get("delivery"):  # delivery confirmation
@@ -237,6 +237,34 @@ def send_message(sender_id, message_text):
         "message": {
             "text": message_text
         }
+    })
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+
+def send_message_image(sender_id, message_url):
+    
+    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url))
+    
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = json.dumps({
+        "recipient":{
+            "id": sender_id
+        },
+        "message":{
+            "attachment":{
+                  "type":"image",
+                  "payload":{
+                      "url": message_url
+                  }
+                }
+            }
     })
     r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
