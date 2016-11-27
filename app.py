@@ -100,11 +100,11 @@ def webhook():
                                 diagnosis = None
                             else:
                                 symptom = str(diagnosis.question.items[0]["id"])
-                                response = str(diagnosis.question.text.encode())
+                                response = str(diagnosis.question.text.encode('utf8'))
                                 if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
-                                    response = response + "\n " + str(diagnosis.question.items[0]["name"].encode()) + "? "
+                                    response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                 for x in diagnosis.question.items[0]["choices"]:
-                                    response = response + "\n - " + str(x["label"].encode())
+                                    response = response + "\n - " + str(x["label"].encode('utf8'))
                                 send_message(sender_id, response)
                             log("-----diagnosis------ " + str(diagnosis))
 
@@ -114,11 +114,11 @@ def webhook():
                             diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
                             log("-----diagnosis------ " + str(diagnosis))
                             symptom = str(diagnosis.question.items[0]["id"])
-                            response = str(diagnosis.question.text.encode())
+                            response = str(diagnosis.question.text.encode('utf8'))
                             if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
-                                response = response + "\n " + str(diagnosis.question.items[0]["name"].encode()) + "? "
+                                response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                             for x in diagnosis.question.items[0]["choices"]:
-                                response = response + "\n - " + str(x["label"].encode())
+                                response = response + "\n - " + str(x["label"].encode('utf8'))
                             send_message(sender_id, response)
 
 
