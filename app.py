@@ -70,7 +70,7 @@ def webhook():
                         gender = str(r.json()["gender"])
                     except:
                         gender = 'male'
-                    age = 20
+                    age = 40
                     sid = None
                     if message.get("text"): # get message
                         message = message["text"]
