@@ -69,8 +69,6 @@ def webhook():
                         message = message["text"]
                         if message == "DoctorBot":
                             symptom = None
-                            gender = None
-                            age = None
                             diagnosis = None
                             init_buttom_template(sender_id)
                         elif symptom is None:
