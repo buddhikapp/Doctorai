@@ -100,11 +100,11 @@ def webhook():
                                 diagnosis = None
                             else:
                                 symptom = str(diagnosis.question.items[0]["id"])
-                                response = str(diagnosis.question.text)
+                                response = str(diagnosis.question.text.encode())
                                 if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
-                                    response = response + "\n " + str(diagnosis.question.items[0]["name"]) + "? "
+                                    response = response + "\n " + str(diagnosis.question.items[0]["name"].encode()) + "? "
                                 for x in diagnosis.question.items[0]["choices"]:
-                                    response = response + "\n - " + str(x["label"])
+                                    response = response + "\n - " + str(x["label"].encode())
                                 send_message(sender_id, response)
                             log("-----diagnosis------ " + str(diagnosis))
 
@@ -114,11 +114,11 @@ def webhook():
                             diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
                             log("-----diagnosis------ " + str(diagnosis))
                             symptom = str(diagnosis.question.items[0]["id"])
-                            response = str(diagnosis.question.text)
+                            response = str(diagnosis.question.text.encode())
                             if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
-                                response = response + "\n " + str(diagnosis.question.items[0]["name"]) + "? "
+                                response = response + "\n " + str(diagnosis.question.items[0]["name"].encode()) + "? "
                             for x in diagnosis.question.items[0]["choices"]:
-                                response = response + "\n - " + str(x["label"])
+                                response = response + "\n - " + str(x["label"].encode())
                             send_message(sender_id, response)
 
 
