@@ -100,6 +100,8 @@ def webhook():
                             else:
                                 symptom = str(diagnosis.question.items[0]["id"])
                                 response = str(diagnosis.question.text)
+                                if str(diagnosis.question.type) == "group_single":
+                                    response = response + "\n " + str(diagnosis.question.items[0]["name"])
                                 for x in diagnosis.question.items[0]["choices"]:
                                     response = response + "\n - " + str(x["label"])
                                 send_message(sender_id, response)
