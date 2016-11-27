@@ -67,18 +67,19 @@ def webhook():
                     sid = None
                     if message.get("text"): # get message
                         message = message["text"]
-                        if message == "DoctorBot":
+                        if message == "DoctorBot" or message.upper() == "HI" or message.upper() == "HELLO":
                             symptom = None
                             diagnosis = None
                             init_buttom_template(sender_id)
                         elif symptom is None:
-                            send_message(sender_id, "Give me a sec!")
                             search_result = search.search_symtom_limit(message, 5)
                             log("----------- " + str(search_result))
                             if len(search_result) > 0:
+                                send_message(sender_id, "Give me a sec!")
                                 sid = str(search_result[0]["id"])
                                 log("************ " + sid)
-
+                            else:
+                                send_message(sender_id, "Sorry, I didn't get that.")
 
 
                         if symptom is not None:
