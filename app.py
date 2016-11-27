@@ -62,7 +62,14 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     # sort different types of messages
                     message = messaging_event["message"]
-                    gender = 'male'
+                    # get user info
+                    r = requests.get('https://graph.facebook.com/v2.8/'+sender_id+
+                                     '?fields=first_name,last_name,locale,timezone,gender&access_token='
+                                     +os.environ["PAGE_ACCESS_TOKEN"])
+                    try:
+                        gender = str(r.json()["gender"])
+                    except:
+                        gender = 'male'
                     age = 20
                     sid = None
                     if message.get("text"): # get message
