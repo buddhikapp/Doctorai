@@ -86,7 +86,7 @@ def webhook():
                                 sid = str(search_result[0]["id"])
                                 log("************ " + sid)
                             else:
-                                send_message(sender_id, "Sorry, I didn't get that.")
+                                send_message(sender_id, "Sorry, Server appears to be busy at the moment. Please try again later.")
 
 
                         if symptom is not None:
