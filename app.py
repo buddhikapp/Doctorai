@@ -111,7 +111,7 @@ def webhook():
                                 symptom = str(diagnosis.question.items[0]["id"])
                                 response = str(diagnosis.question.text)
                                 if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
-                                    response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
+                                    response = response + "\n " + str(diagnosis.question.items[0]["name"]) + "? "
                                 for x in diagnosis.question.items[0]["choices"]:
                                     response = response + "\n - " + str(x["label"])
                                 send_message(sender_id, response)
@@ -125,7 +125,7 @@ def webhook():
                             symptom = str(diagnosis.question.items[0]["id"])
                             response = str(diagnosis.question.text)
                             if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
-                                response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
+                                response = response + "\n " + str(diagnosis.question.items[0]["name"]) + "? "
                             for x in diagnosis.question.items[0]["choices"]:
                                 response = response + "\n - " + str(x["label"])
                             send_message(sender_id, response)
@@ -182,7 +182,7 @@ def webhook():
                         elif attach["type"] == "image":
                             image_url = attach["payload"]["url"]
                             message = image_url
-                            send_message_image(sender_id, message.encode('utf8'))
+                            send_message_image(sender_id, message)
 
 
                 # if messaging_event.get("delivery"):  # delivery confirmation
