@@ -47,7 +47,7 @@ def webhook():
     if data["object"] == "page":
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
-                
+                log("********Symtom Start******** " + str(symptom))
                 global diagnosis, symptom
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
@@ -190,7 +190,7 @@ def webhook():
 
                 # if messaging_event.get("optin"):  # optin confirmation
                 #     pass
-                log("********Symtom******** " + str(symptom))
+                log("********Symtom End******** " + str(symptom))
     return "ok", 200
 
 def api_ai_analysis(message):
