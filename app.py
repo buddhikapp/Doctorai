@@ -177,7 +177,7 @@ def webhook():
                                 mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
                             send_message(sender_id, "And here they are on a map :)")
                             #sendImage
-                            send_message(sender_id, mapurl)
+                            send_message_image(sender_id, mapurl)
                         elif attach["type"] == "image":
                             image_url = attach["payload"]["url"]
                             message = image_url
