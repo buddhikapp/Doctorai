@@ -101,6 +101,7 @@ def webhook():
                             if diagnosis.conditions[0]["probability"] > 0.25:
                                 send_message(sender_id, "I suspect "+str(diagnosis.conditions[0]["name"])+" with a probability of "+str(diagnosis.conditions[0]["probability"]))
                                 send_message(sender_id, "Please send me your location so I can find a doctor near you")
+                                send_message_quick_location(sender_id)
                                 symptom = None
                                 gender = None
                                 age = None
@@ -245,7 +246,7 @@ def send_message(sender_id, message_text):
             "text": message_text
         }
     })
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
@@ -273,7 +274,35 @@ def send_message_image(sender_id, message_url):
                 }
             }
     })
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+
+def send_message_quick_location(sender_id):
+    
+    log("sending location message to {recipient}".format(recipient=sender_id))
+    
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+data = json.dumps({
+                  "recipient":{
+                  "id": sender_id
+                  },
+                  "message":{
+                  "text":"Please share your location:",
+                  "quick_replies":[
+                                   {
+                                   "content_type": "location",
+                                   }
+                                   ]
+                  }
+                  })
+r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
