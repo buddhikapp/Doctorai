@@ -109,9 +109,9 @@ def webhook():
                                 diagnosis = None
                             else:
                                 symptom = str(diagnosis.question.items[0]["id"])
-                                response = str(diagnosis.question.text)
+                                response = str(diagnosis.question.text.encode('utf8'))
                                 if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
-                                    response = response + "\n " + str(diagnosis.question.items[0]["name"]) + "? "
+                                    response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                 for x in diagnosis.question.items[0]["choices"]:
                                     response = response + "\n - " + str(x["label"])
                                 send_message(sender_id, response)
@@ -123,9 +123,9 @@ def webhook():
                             diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
                             log("-----diagnosis------ " + str(diagnosis))
                             symptom = str(diagnosis.question.items[0]["id"])
-                            response = str(diagnosis.question.text)
+                            response = str(diagnosis.question.text.encode('utf8'))
                             if str(diagnosis.question.type) == "group_single" or str(diagnosis.question.type) == "group_multiple":
-                                response = response + "\n " + str(diagnosis.question.items[0]["name"]) + "? "
+                                response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                             for x in diagnosis.question.items[0]["choices"]:
                                 response = response + "\n - " + str(x["label"])
                             send_message(sender_id, response)
@@ -230,7 +230,7 @@ def api_ai_filled(message):
         return False
 
 def send_message(sender_id, message_text):
-    message_text = message_text.encode('utf8')
+    #message_text = message_text.encode('utf8')
     log("sending message to {recipient}: {text}".format(recipient=sender_id, text=message_text))
 
     params = {
@@ -253,8 +253,8 @@ def send_message(sender_id, message_text):
         log(r.text)
 
 def send_message_image(sender_id, message_url):
-    message_url = message_url.encode('utf8')
-    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url))
+    #message_url = message_url.encode('utf8')
+    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url.encode('utf8')))
     
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
