@@ -180,7 +180,7 @@ def webhook():
                         elif attach["type"] == "image":
                             image_url = attach["payload"]["url"]
                             message = image_url
-                            send_message_image(sender_id, message)
+                            send_message_image(sender_id, message.encode('utf8'))
 
 
                 # if messaging_event.get("delivery"):  # delivery confirmation
