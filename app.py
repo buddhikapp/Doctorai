@@ -190,7 +190,7 @@ def webhook():
 
                 # if messaging_event.get("optin"):  # optin confirmation
                 #     pass
-
+                log("********Symtom******** " + str(symptom))
     return "ok", 200
 
 def api_ai_analysis(message):
