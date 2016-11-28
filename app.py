@@ -47,7 +47,8 @@ def webhook():
     if data["object"] == "page":
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
-
+                
+                global diagnosis, symptom
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     log("sender_id : " + sender_id)
@@ -117,7 +118,7 @@ def webhook():
                             log("-----diagnosis------ " + str(diagnosis))
 
 
-                        global diagnosis, symptom
+
                         if diagnosis is None and sid is not None:
                             diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
                             log("-----diagnosis------ " + str(diagnosis))
