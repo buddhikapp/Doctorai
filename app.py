@@ -168,7 +168,7 @@ def webhook():
                                 maxi = len(venues)
                             for x in range(0, maxi):
                                 hospitals.append(venues[x]["name"])
-                                send_message(sender_id, "Option #"+str(x+1)+": "+venues[x]["name"])
+                                send_message(sender_id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
                                 latitudes.append(venues[x]["location"]["lat"])
                                 longitudes.append(venues[x]["location"]["lng"])
                             message = "Location: " + str(latitude) + ", " + str(longitude)
