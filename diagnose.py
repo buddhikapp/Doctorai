@@ -18,15 +18,6 @@ def gender(sender_id):
         gender = ""
 
 
-def searchSymptom(symptom, sender_id):
-	if symptom == "fever":
-		return "s_98"
-	if symptom == "headache":
-		return "s_21"
-	if symptom == "knee pain":
-		return "s_581"
-
-
 def init_diagnose(symptom_id,age,gender,sender_id):
 	request = infermedica_api.Diagnosis(sex=gender, age=age)
 	request.add_symptom(symptom_id, 'present')
