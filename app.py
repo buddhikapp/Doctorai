@@ -189,7 +189,7 @@ def webhook():
                             send_message_image(sender_id, mapurl)
                         elif attach["type"] == "image":
                             image_url = attach["payload"]["url"]
-                            message = image_url.replace("/p100x100/","/p50x50/")
+                            message = image_url#.replace("/p100x100/","/p200x200/")
                             send_message_image(sender_id, message)
 
 
