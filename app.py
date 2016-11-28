@@ -230,8 +230,8 @@ def api_ai_filled(message):
         return False
 
 def send_message(sender_id, message_text):
-
-    log("sending message to {recipient}: {text}".format(recipient=sender_id, text=message_text.encode('utf8')))
+    message_text = message_text.encode('utf8')
+    log("sending message to {recipient}: {text}".format(recipient=sender_id, text=message_text))
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -253,8 +253,8 @@ def send_message(sender_id, message_text):
         log(r.text)
 
 def send_message_image(sender_id, message_url):
-    
-    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url.encode('utf8')))
+    message_url = message_url.encode('utf8')
+    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url))
     
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
