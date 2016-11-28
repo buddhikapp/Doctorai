@@ -289,9 +289,9 @@ def send_message_quick_location(sender_id):
     headers = {
         "Content-Type": "application/json"
     }
-data = json.dumps({
-                  "recipient":{
-                  "id": sender_id
+    data = json.dumps({
+        "recipient":{
+            "id": sender_id
                   },
                   "message":{
                   "text":"Please share your location:",
@@ -300,9 +300,9 @@ data = json.dumps({
                                    "content_type": "location",
                                    }
                                    ]
-                  }
-                  })
-r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
+            }
+    })
+    r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
