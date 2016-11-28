@@ -79,15 +79,15 @@ def webhook():
                             symptom = None
                             diagnosis = None
                             init_buttom_template(sender_id)
-#                        elif symptom is None:
-#                            search_result = search.search_symtom_limit(message, 5)
-#                            log("----------- " + str(search_result))
-#                            if len(search_result) > 0:
-#                                send_message(sender_id, "Give me a sec!")
-#                                sid = str(search_result[0]["id"])
-#                                log("************ " + sid)
-#                            else:
-#                                send_message(sender_id, "Sorry, Server appears to be busy at the moment. Please try again later.")
+                        elif symptom is None:
+                            search_result = search.search_symtom_limit(message, 5)
+                            log("----------- " + str(search_result))
+                            if len(search_result) > 0:
+                                send_message(sender_id, "Give me a sec!")
+                                sid = str(search_result[0]["id"])
+                                log("************ " + sid)
+                            else:
+                                send_message(sender_id, "Sorry, Server appears to be busy at the moment. Please try again later.")
 
 
                         if symptom is not None:
@@ -116,15 +116,7 @@ def webhook():
                                     response = response + "\n - " + str(x["label"])
                                 send_message(sender_id, response)
                             log("-----diagnosis------ " + str(diagnosis))
-                        elif symptom is None:
-                            search_result = search.search_symtom_limit(message, 5)
-                            log("----------- " + str(search_result))
-                            if len(search_result) > 0:
-                                send_message(sender_id, "Give me a sec!")
-                                sid = str(search_result[0]["id"])
-                                log("************ " + sid)
-                            else:
-                                send_message(sender_id, "Sorry, Server appears to be busy at the moment. Please try again later.")
+                        
 
 
                         if diagnosis is None and sid is not None:
