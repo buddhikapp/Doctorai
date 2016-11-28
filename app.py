@@ -74,7 +74,7 @@ def webhook():
                     sid = None
                     if message.get("text"): # get message
                         message = message["text"]
-                        if message == "DoctorBot" or message.upper() == "HI" or message.upper() == "HELLO":
+                        if message.upper() == "DOCTORBOT" or message.upper() == "HI" or message.upper() == "HELLO":
                             symptom = None
                             diagnosis = None
                             init_buttom_template(sender_id)
@@ -229,7 +229,7 @@ def api_ai_filled(message):
 
 def send_message(sender_id, message_text):
 
-    log("sending message to {recipient}: {text}".format(recipient=sender_id, text=message_text))
+    log("sending message to {recipient}: {text}".format(recipient=sender_id, text=message_text.encode('utf8')))
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -252,7 +252,7 @@ def send_message(sender_id, message_text):
 
 def send_message_image(sender_id, message_url):
     
-    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url))
+    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url.encode('utf8')))
     
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
