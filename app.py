@@ -24,6 +24,7 @@ symptom = None
 gender = None
 age = None
 diagnosis = None
+myUser = user.MyUser()
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -44,7 +45,7 @@ def webhook():
     log("%%%% New Message %%%% " + str(data))  # you may not want to log every incoming message in production, but it's good for testing
 
 #    global diagnosis, symptom
-    myUser = user.MyUser()
+
     
     if data["object"] == "page":
         for entry in data["entry"]:
@@ -231,9 +232,9 @@ def api_ai_filled(message):
     else:
         return False
 
-def send_message(myUser.id, message_text):
+def send_message(sender_id, message_text):
     #message_text = message_text.encode('utf8')
-    log("sending message to {recipient}: {text}".format(recipient=myUser.id, text=message_text))
+    log("sending message to {recipient}: {text}".format(recipient=sender_id, text=message_text))
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -243,7 +244,7 @@ def send_message(myUser.id, message_text):
     }
     data = json.dumps({
         "recipient": {
-            "id": myUser.id
+            "id": sender_id
         },
         "message": {
             "text": message_text
@@ -254,9 +255,9 @@ def send_message(myUser.id, message_text):
         log(r.status_code)
         log(r.text)
 
-def send_message_image(myUser.id, message_url):
+def send_message_image(sender_id, message_url):
     #message_url = message_url.encode('utf8')
-    log("sending image message to {recipient}: {text}".format(recipient=myUser.id, text=message_url.encode('utf8')))
+    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url.encode('utf8')))
     
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -266,7 +267,7 @@ def send_message_image(myUser.id, message_url):
     }
     data = json.dumps({
         "recipient":{
-            "id": myUser.id
+            "id": sender_id
         },
         "message":{
             "attachment":{
@@ -282,9 +283,9 @@ def send_message_image(myUser.id, message_url):
         log(r.status_code)
         log(r.text)
 
-def send_message_quick_location(myUser.id):
+def send_message_quick_location(sender_id):
     
-    log("sending location message to {recipient}".format(recipient=myUser.id))
+    log("sending location message to {recipient}".format(recipient=sender_id))
     
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -294,7 +295,7 @@ def send_message_quick_location(myUser.id):
     }
     data = json.dumps({
         "recipient":{
-            "id": myUser.id
+            "id": sender_id
                   },
                   "message":{
                   "text":"Please share your location:",
@@ -311,10 +312,10 @@ def send_message_quick_location(myUser.id):
         log(r.text)
 
 
-def init_buttom_template(myUser.id):
+def init_buttom_template(sender_id):
 
     # get user info
-    r = requests.get('https://graph.facebook.com/v2.8/'+myUser.id+
+    r = requests.get('https://graph.facebook.com/v2.8/'+sender_id+
         '?fields=first_name,last_name,locale,timezone,gender&access_token='
         +os.environ["PAGE_ACCESS_TOKEN"])
     try:
@@ -343,7 +344,7 @@ def init_buttom_template(myUser.id):
     else:
         welcome_message = "Hello "+first_name+" "+last_name + "! How may I help you?" 
 
-    log("Sending button template to {recipient}.".format(recipient=myUser.id))
+    log("Sending button template to {recipient}.".format(recipient=sender_id))
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -353,7 +354,7 @@ def init_buttom_template(myUser.id):
     }
     data = json.dumps({
         "recipient": {
-            "id": myUser.id
+            "id": sender_id
         },
         "message":{
             "attachment":{
