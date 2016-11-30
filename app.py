@@ -52,21 +52,21 @@ def webhook():
                 log("********Symtom Start******** " + str(symptom))
                 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                    sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                    log("sender_id : " + sender_id)
+                    myUser.id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+                    log("myUser.id : " + myUser.id)
                     recipient_id = messaging_event["recipient"]["id"]
                     log("recipient_id : " + recipient_id)
                     message = messaging_event["postback"]["payload"]
                     log("message : " + message)
-                    send_message(sender_id, message)
+                    send_message(myUser.id, message)
 
                 elif messaging_event.get("message"):  # someone sent us a message
-                    sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+                    myUser.id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     # sort different types of messages
                     message = messaging_event["message"]
                     # get user info
-                    r = requests.get('https://graph.facebook.com/v2.8/'+sender_id+
+                    r = requests.get('https://graph.facebook.com/v2.8/'+myUser.id+
                                      '?fields=first_name,last_name,locale,timezone,gender&access_token='
                                      +os.environ["PAGE_ACCESS_TOKEN"])
                     try:
@@ -80,31 +80,31 @@ def webhook():
                         if message.upper() == "DOCTORBOT" or message.upper() == "HI" or message.upper() == "HELLO":
                             symptom = None
                             diagnosis = None
-                            init_buttom_template(sender_id)
+                            init_buttom_template(myUser.id)
                         elif symptom is None:
                             search_result = search.search_symtom_limit(message, 5)
                             log("----------- " + str(search_result))
                             if len(search_result) > 0:
-                                send_message(sender_id, "Give me a sec!")
+                                send_message(myUser.id, "Give me a sec!")
                                 sid = str(search_result[0]["id"])
                                 log("************ " + sid)
                             else:
-                                send_message(sender_id, "Sorry, Server appears to be busy at the moment. Please try again later.")
+                                send_message(myUser.id, "Sorry, Server appears to be busy at the moment. Please try again later.")
 
 
                         if symptom is not None:
                             if string.find(message.upper(),str(diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
-                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][0]["id"]))
+                                diagnosis = diagnose.improve_diagnosis(diagnosis,myUser.id,symptom,str(diagnosis.question.items[0]["choices"][0]["id"]))
                             elif string.find(message.upper(),str(diagnosis.question.items[0]["choices"][1]["label"]).upper()) is not -1:
-                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][1]["id"]))
+                                diagnosis = diagnose.improve_diagnosis(diagnosis,myUser.id,symptom,str(diagnosis.question.items[0]["choices"][1]["id"]))
                             elif string.find(message.upper(),str(diagnosis.question.items[0]["choices"][2]["label"]).upper()) is not -1:
-                                diagnosis = diagnose.improve_diagnosis(diagnosis,sender_id,symptom,str(diagnosis.question.items[0]["choices"][2]["id"]))
+                                diagnosis = diagnose.improve_diagnosis(diagnosis,myUser.id,symptom,str(diagnosis.question.items[0]["choices"][2]["id"]))
                             else:
-                                send_message(sender_id, "Sorry, I didn't get that. Please enter your answer again.")
+                                send_message(myUser.id, "Sorry, I didn't get that. Please enter your answer again.")
                             if diagnosis.conditions[0]["probability"] > 0.25:
-                                send_message(sender_id, "I suspect "+str(diagnosis.conditions[0]["name"])+" with a probability of "+str(diagnosis.conditions[0]["probability"]))
-                                send_message(sender_id, "Please send me your location so I can find a doctor near you")
-                                send_message_quick_location(sender_id)
+                                send_message(myUser.id, "I suspect "+str(diagnosis.conditions[0]["name"])+" with a probability of "+str(diagnosis.conditions[0]["probability"]))
+                                send_message(myUser.id, "Please send me your location so I can find a doctor near you")
+                                send_message_quick_location(myUser.id)
                                 symptom = None
                                 gender = None
                                 age = None
@@ -116,13 +116,13 @@ def webhook():
                                     response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                 for x in diagnosis.question.items[0]["choices"]:
                                     response = response + "\n - " + str(x["label"])
-                                send_message(sender_id, response)
+                                send_message(myUser.id, response)
                             log("-----diagnosis------ " + str(diagnosis))
                         
 
 
                         if diagnosis is None and sid is not None:
-                            diagnosis = diagnose.init_diagnose(sid,age,gender,sender_id)
+                            diagnosis = diagnose.init_diagnose(sid,age,gender,myUser.id)
                             log("-----diagnosis------ " + str(diagnosis))
                             symptom = str(diagnosis.question.items[0]["id"])
                             response = str(diagnosis.question.text.encode('utf8'))
@@ -130,7 +130,7 @@ def webhook():
                                 response = response + "\n " + str(diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                             for x in diagnosis.question.items[0]["choices"]:
                                 response = response + "\n - " + str(x["label"])
-                            send_message(sender_id, response)
+                            send_message(myUser.id, response)
 
 
                     # if message.get("text"): # get message
@@ -147,9 +147,9 @@ def webhook():
                     #         pass
                     #     else:
                     #         if message == "Hi":
-                    #             init_buttom_template(sender_id)
+                    #             init_buttom_template(myUser.id)
                     #         else:
-                    #             send_message(sender_id, "Say 'Hi' to the DoctorBot to get started!")
+                    #             send_message(myUser.id, "Say 'Hi' to the DoctorBot to get started!")
 
                     elif message.get("attachments"):    # get attachment
                         attach = message["attachments"][0]  # loop over attachments?
@@ -170,7 +170,7 @@ def webhook():
                                 maxi = len(venues)
                             for x in range(0, maxi):
                                 hospitals.append(venues[x]["name"])
-                                send_message(sender_id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
+                                send_message(myUser.id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
                                 latitudes.append(venues[x]["location"]["lat"])
                                 longitudes.append(venues[x]["location"]["lng"])
                             message = "Location: " + str(latitude) + ", " + str(longitude)
@@ -178,13 +178,13 @@ def webhook():
                             mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key=AIzaSyBwJxBRpzx10gHVn1V1m2Cksbs8v1pQEQA&size=800x800"
                             for y in range(0,maxi):
                                 mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
-                            send_message(sender_id, "And here they are on a map :)")
+                            send_message(myUser.id, "And here they are on a map :)")
                             #sendImage
-                            send_message_image(sender_id, mapurl)
+                            send_message_image(myUser.id, mapurl)
                         elif attach["type"] == "image":
                             image_url = attach["payload"]["url"]
                             message = image_url#.replace("/p100x100/","/p200x200/")
-                            send_message_image(sender_id, message)
+                            send_message_image(myUser.id, message)
 
 
                 # if messaging_event.get("delivery"):  # delivery confirmation
@@ -231,9 +231,9 @@ def api_ai_filled(message):
     else:
         return False
 
-def send_message(sender_id, message_text):
+def send_message(myUser.id, message_text):
     #message_text = message_text.encode('utf8')
-    log("sending message to {recipient}: {text}".format(recipient=sender_id, text=message_text))
+    log("sending message to {recipient}: {text}".format(recipient=myUser.id, text=message_text))
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -243,7 +243,7 @@ def send_message(sender_id, message_text):
     }
     data = json.dumps({
         "recipient": {
-            "id": sender_id
+            "id": myUser.id
         },
         "message": {
             "text": message_text
@@ -254,9 +254,9 @@ def send_message(sender_id, message_text):
         log(r.status_code)
         log(r.text)
 
-def send_message_image(sender_id, message_url):
+def send_message_image(myUser.id, message_url):
     #message_url = message_url.encode('utf8')
-    log("sending image message to {recipient}: {text}".format(recipient=sender_id, text=message_url.encode('utf8')))
+    log("sending image message to {recipient}: {text}".format(recipient=myUser.id, text=message_url.encode('utf8')))
     
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -266,7 +266,7 @@ def send_message_image(sender_id, message_url):
     }
     data = json.dumps({
         "recipient":{
-            "id": sender_id
+            "id": myUser.id
         },
         "message":{
             "attachment":{
@@ -282,9 +282,9 @@ def send_message_image(sender_id, message_url):
         log(r.status_code)
         log(r.text)
 
-def send_message_quick_location(sender_id):
+def send_message_quick_location(myUser.id):
     
-    log("sending location message to {recipient}".format(recipient=sender_id))
+    log("sending location message to {recipient}".format(recipient=myUser.id))
     
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -294,7 +294,7 @@ def send_message_quick_location(sender_id):
     }
     data = json.dumps({
         "recipient":{
-            "id": sender_id
+            "id": myUser.id
                   },
                   "message":{
                   "text":"Please share your location:",
@@ -311,10 +311,10 @@ def send_message_quick_location(sender_id):
         log(r.text)
 
 
-def init_buttom_template(sender_id):
+def init_buttom_template(myUser.id):
 
     # get user info
-    r = requests.get('https://graph.facebook.com/v2.8/'+sender_id+
+    r = requests.get('https://graph.facebook.com/v2.8/'+myUser.id+
         '?fields=first_name,last_name,locale,timezone,gender&access_token='
         +os.environ["PAGE_ACCESS_TOKEN"])
     try:
@@ -343,7 +343,7 @@ def init_buttom_template(sender_id):
     else:
         welcome_message = "Hello "+first_name+" "+last_name + "! How may I help you?" 
 
-    log("Sending button template to {recipient}.".format(recipient=sender_id))
+    log("Sending button template to {recipient}.".format(recipient=myUser.id))
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
@@ -353,7 +353,7 @@ def init_buttom_template(sender_id):
     }
     data = json.dumps({
         "recipient": {
-            "id": sender_id
+            "id": myUser.id
         },
         "message":{
             "attachment":{
