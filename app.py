@@ -44,7 +44,7 @@ def webhook():
     log("%%%% New Message %%%% " + str(data))  # you may not want to log every incoming message in production, but it's good for testing
 
     global diagnosis, symptom
-    myUser = my_user()
+    myUser = user.my_user()
     
     if data["object"] == "page":
         for entry in data["entry"]:
