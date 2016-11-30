@@ -8,6 +8,7 @@ import sqlite3
 import string
 import diagnose
 import search
+import user
 import urllib, json
 from flask import Flask, request
 
@@ -43,7 +44,8 @@ def webhook():
     log("%%%% New Message %%%% " + str(data))  # you may not want to log every incoming message in production, but it's good for testing
 
     global diagnosis, symptom
-
+    myUser = my_user()
+    
     if data["object"] == "page":
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
