@@ -52,7 +52,7 @@ def webhook():
             for entry in data["entry"]:
                 for messaging_event in entry["messaging"]:
                     log("********Symtom Start******** " + str(myUser.symptom))
-                    log("myUsers Lenght : " + len(myUsers))
+                    log("myUsers Lenght : " + str(len(myUsers)))
                     if messaging_event.get("postback") or messaging_event.get("message"):
                         if user.CheckUser(messaging_event["sender"]["id"], myUsers):
                             myUser = user.GetUser(messaging_event["sender"]["id"], myUsers)
@@ -61,7 +61,7 @@ def webhook():
                             myUser = user.CreateUser(messaging_event["sender"]["id"])
                             myUsers.append(myUser)
                             log("User Created : " + str(myUser.id))
-                    log("myUsers Lenght : " + len(myUsers))
+                    log("myUsers Lenght : " + str(len(myUsers)))
                     
                     if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
 
