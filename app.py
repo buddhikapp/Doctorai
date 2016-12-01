@@ -9,6 +9,7 @@ import string
 import diagnose
 import search
 import user
+import psql
 import urllib, json
 from flask import Flask, request
 
