@@ -16,3 +16,51 @@ class MyUser:
         self.gender = None
         self.age = None
         self.diagnosis = None
+        self.first_name = None
+        self.last_name = None
+        self.profile_pic = None
+
+
+def CheckUser(userID, usersList):
+    for user in usersList:
+        if user.id == userID:
+            return True
+    return False
+
+def GetUser(userID, usersList):
+    for user in usersList:
+        if user.id == userID:
+            return user
+    return False
+
+def CreateUser(userID)
+    newUser = MyUser()
+    newUser.id = userID
+    r = requests.get('https://graph.facebook.com/v2.8/'+userID+
+                 '?fields=first_name,last_name,locale,timezone,gender&access_token='
+                 +os.environ["PAGE_ACCESS_TOKEN"])
+    try:
+        newUser.first_name = str(r.json()["first_name"])
+    except:
+        newUser.first_name = ""
+    try:
+        newUser.last_name = str(r.json()["last_name"])
+    except:
+        newUser.last_name = ""
+    try:
+        newUser.gender = str(r.json()["gender"])
+    except:
+        newUser.gender = "male"
+    try:
+        newUser.profile_pic = str(r.json()["profile_pic"])
+    except:
+        newUser.profile_pic = ""
+
+    newUser.age = 40  #Need to be impliment
+
+    return newUser
+
+
+def RemoveUser(user, usersList)
+    usersList.remove(user)
+

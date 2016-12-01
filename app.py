@@ -24,7 +24,7 @@ symptom_mode = False
 #gender = None
 #age = None
 #diagnosis = None
-myUser = user.MyUser()
+myUsers = []
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -45,16 +45,26 @@ def webhook():
     log("%%%% New Message %%%% " + str(data))  # you may not want to log every incoming message in production, but it's good for testing
 
 #    global diagnosis, symptom
-
+    myUser = user.MyUser()
+    
     if "object" in data:
         if data["object"] == "page":
             for entry in data["entry"]:
                 for messaging_event in entry["messaging"]:
                     log("********Symtom Start******** " + str(myUser.symptom))
                     
+                    if messaging_event.get("postback") or messaging_event.get("message"):
+                        if user.CheckUser(messaging_event["sender"]["id"], myUsers):
+                            myUser = user.GetUser(messaging_event["sender"]["id"], myUsers)
+                            log("User Found : " + str(myUser.id))
+                        else:
+                            myUser = user.CreateUser(messaging_event["sender"]["id"])
+                            myUsers.append(myUser)
+                            log("User Created : " + str(myUser.id))
+                    log(myUser)
+                    
                     if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                        myUser.id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                        log("myUser.id : " + myUser.id)
+
                         recipient_id = messaging_event["recipient"]["id"]
                         log("recipient_id : " + recipient_id)
                         message = messaging_event["postback"]["payload"]
@@ -62,26 +72,18 @@ def webhook():
                         send_message(myUser.id, message)
 
                     elif messaging_event.get("message"):  # someone sent us a message
-                        myUser.id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+
                         recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                         # sort different types of messages
                         message = messaging_event["message"]
-                        # get user info
-                        r = requests.get('https://graph.facebook.com/v2.8/'+myUser.id+
-                                         '?fields=first_name,last_name,locale,timezone,gender&access_token='
-                                         +os.environ["PAGE_ACCESS_TOKEN"])
-                        try:
-                            myUser.gender = str(r.json()["gender"])
-                        except:
-                            myUser.gender = 'male'
-                        myUser.age = 40
+
                         sid = None
                         if message.get("text"): # get message
                             message = message["text"]
                             if message.upper() == "DOCTORBOT" or message.upper() == "HI" or message.upper() == "HELLO":
                                 myUser.symptom = None
                                 myUser.diagnosis = None
-                                init_buttom_template(myUser.id)
+                                init_buttom_template(myUser)
                             elif myUser.symptom is None:
                                 search_result = search.search_symtom_limit(message, 5)
                                 log("----------- " + str(search_result))
@@ -106,10 +108,15 @@ def webhook():
                                     send_message(myUser.id, "I suspect "+str(myUser.diagnosis.conditions[0]["name"])+" with a probability of "+str(myUser.diagnosis.conditions[0]["probability"]))
                                     send_message(myUser.id, "Please send me your location so I can find a doctor near you")
                                     send_message_quick_location(myUser.id)
-                                    myUser.symptom = None
-                                    myUser.gender = None
-                                    myUser.age = None
-                                    myUser.diagnosis = None
+#                                    myUser.symptom = None
+#                                    myUser.gender = None
+#                                    myUser.age = None
+#                                    myUser.diagnosis = None
+
+                                    log(myUsers)
+                                    user.RemoveUser(myUser,myUsers)
+                                    log(myUsers)
+
                                 else:
                                     myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
                                     response = str(myUser.diagnosis.question.text.encode('utf8'))
@@ -313,37 +320,16 @@ def send_message_quick_location(sender_id):
         log(r.text)
 
 
-def init_buttom_template(sender_id):
-
-    # get user info
-    r = requests.get('https://graph.facebook.com/v2.8/'+sender_id+
-        '?fields=first_name,last_name,locale,timezone,gender&access_token='
-        +os.environ["PAGE_ACCESS_TOKEN"])
-    try:
-        first_name = str(r.json()["first_name"])
-    except:
-        first_name = ""
-    try:
-        last_name = str(r.json()["last_name"])
-    except:
-        last_name = ""
-    try:
-        myUser.gender = str(r.json()["gender"])
-    except:
-        myUser.gender = ""
-    try:
-        profile_pic = str(r.json()["profile_pic"])
-    except:
-        profile_pic = ""
+def init_buttom_template(userTemplate):
 
     welcome_message = "Hello! How may I help you?"
-    if myUser.gender is not "":
-        if myUser.gender == 'male':
-            welcome_message = "Hello Mr."+" "+first_name+" "+last_name + "! How may I help you?"
+    if userTemplate.gender is not "":
+        if userTemplate.gender == 'male':
+            welcome_message = "Hello Mr."+" "+userTemplate.first_name+" "+userTemplate.last_name + "! How may I help you?"
         else:
-            welcome_message = "Hello Ms."+" "+first_name+" "+last_name + "! How may I help you?"
+            welcome_message = "Hello Ms."+" "+userTemplate.first_name+" "+userTemplate.last_name + "! How may I help you?"
     else:
-        welcome_message = "Hello "+first_name+" "+last_name + "! How may I help you?" 
+        welcome_message = "Hello "+userTemplate.first_name+" "+userTemplate.last_name + "! How may I help you?"
 
     log("Sending button template to {recipient}.".format(recipient=sender_id))
 
@@ -355,7 +341,7 @@ def init_buttom_template(sender_id):
     }
     data = json.dumps({
         "recipient": {
-            "id": sender_id
+            "id": userTemplate.id
         },
         "message":{
             "attachment":{
