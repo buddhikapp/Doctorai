@@ -1,29 +1,38 @@
-import os
-import sys
-import json
-import requests
-import urllib, json
-import infermedica_api
+#!/usr/bin/python
 import psycopg2
-import sys
-api = infermedica_api.API(app_id='21794b8d', app_key='81f5f69f0cc9d2defaa3c722c0e905bf')
-#print(api.info())
+from config import config
 
-
-
-def main():
-    #Define our connection string
-    conn_string = "host='ec2-174-129-3-207.compute-1.amazonaws.com' dbname='db19l6fi8jcmti' user='ewviievtbagcfo' password='XOg2zdlJmYY8L35Cs1L-Yf6JNj'"
+def connect():
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
         
-    # print the connection string we will use to connect
-    print "Connecting to database\n	->%s" % (conn_string)
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
         
-    # get a connection, if a connect cannot be made an exception will be raised here
-    conn = psycopg2.connect(conn_string)
+        # create a cursor
+        cur = conn.cursor()
         
-    # conn.cursor will return a cursor object, you can use this cursor to perform queries
-    cursor = conn.cursor()
-    print "Connected !\n"
+        # execute a statement
+        print('PostgreSQL database version:')
+        cur.execute('SELECT version()')
+        
+        # display the PostgreSQL database server version
+        db_version = cur.fetchone()
+        print(db_version)
+        
+        # close the communication with the PostgreSQL
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
 
-if __name__ == "__main__":
-    main()
+
+if __name__ == '__main__':
+    connect()
