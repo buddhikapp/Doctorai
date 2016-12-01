@@ -86,7 +86,7 @@ def webhook():
                                 myUser.diagnosis = None
                                 init_buttom_template(myUser)
 
-                            if myUser.symptom is not None:
+                            elif myUser.symptom is not None:
                                 if string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
                                     myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][0]["id"]))
                                 elif string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][1]["label"]).upper()) is not -1:
@@ -121,31 +121,29 @@ def webhook():
                                         response = response + "\n - " + str(x["label"])
                                     send_message(myUser.id, response)
 #                                log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
-                            else:
+
+                            elif myUser.diagnosis is None:
                                 search_result = search.search_symtom_limit(message, 5)
                                 log("----------- " + str(search_result))
                                 if len(search_result) > 0:
                                     send_message(myUser.id, "Give me a sec!")
                                     sid = str(search_result[0]["id"])
                                     log("************ " + sid)
+                                
+                                    myUser.diagnosis = diagnose.init_diagnose(sid,myUser.age,myUser.gender,myUser.id)
+                                    log("-----myUser.diagnosis First Time------ " + str(myUser.diagnosis))
+                                    myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
+                                    response = str(myUser.diagnosis.question.text.encode('utf8'))
+                                    if "image_url" in myUser.diagnosis.question.extras:
+                                        send_message_image(myUser.id, myUser.diagnosis.question.extras["image_url"])
+                                    if str(myUser.diagnosis.question.type) == "group_single" or str(myUser.diagnosis.question.type) == "group_multiple":
+                                        response = response + "\n " + str(myUser.diagnosis.question.items[0]["name"].encode('utf8')) + "? "
+                                    for x in myUser.diagnosis.question.items[0]["choices"]:
+                                        response = response + "\n - " + str(x["label"])
+                                    send_message(myUser.id, response)
+                                    
                                 else:
                                     send_message(myUser.id, "Sorry, Server appears to be busy at the moment. Please try again later.")
-                            
-
-
-
-                            if myUser.diagnosis is None and sid is not None:
-                                myUser.diagnosis = diagnose.init_diagnose(sid,myUser.age,myUser.gender,myUser.id)
-                                log("-----myUser.diagnosis First Time------ " + str(myUser.diagnosis))
-                                myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
-                                response = str(myUser.diagnosis.question.text.encode('utf8'))
-                                if "image_url" in myUser.diagnosis.question.extras:
-                                    send_message_image(myUser.id, myUser.diagnosis.question.extras["image_url"])
-                                if str(myUser.diagnosis.question.type) == "group_single" or str(myUser.diagnosis.question.type) == "group_multiple":
-                                    response = response + "\n " + str(myUser.diagnosis.question.items[0]["name"].encode('utf8')) + "? "
-                                for x in myUser.diagnosis.question.items[0]["choices"]:
-                                    response = response + "\n - " + str(x["label"])
-                                send_message(myUser.id, response)
 
 
                         # if message.get("text"): # get message
