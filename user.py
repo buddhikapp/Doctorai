@@ -31,7 +31,7 @@ def GetUser(userID, usersList):
     for user in usersList:
         if user.id == userID:
             return user
-    return False
+    return MyUser()
 
 def CreateUser(userID):
     newUser = MyUser()

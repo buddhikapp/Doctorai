@@ -114,6 +114,7 @@ def webhook():
 #                                    myUser.diagnosis = None
 
                                     log("myUsers Lenght : " + str(len(myUsers)))
+                                    log("Removing user : " + str(myUser.id))
                                     user.RemoveUser(myUser,myUsers)
                                     log("myUsers Lenght : " + str(len(myUsers)))
 
@@ -131,7 +132,7 @@ def webhook():
 
                             if myUser.diagnosis is None and sid is not None:
                                 myUser.diagnosis = diagnose.init_diagnose(sid,myUser.age,myUser.gender,myUser.id)
-                                log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
+                                log("-----myUser.diagnosis First Time------ " + str(myUser.diagnosis))
                                 myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
                                 response = str(myUser.diagnosis.question.text.encode('utf8'))
                                 if str(myUser.diagnosis.question.type) == "group_single" or str(myUser.diagnosis.question.type) == "group_multiple":
