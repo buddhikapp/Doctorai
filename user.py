@@ -63,4 +63,5 @@ def CreateUser(userID):
 
 def RemoveUser(user, usersList):
     usersList.remove(user)
+    user = None
 
