@@ -85,16 +85,6 @@ def webhook():
                                 myUser.symptom = None
                                 myUser.diagnosis = None
                                 init_buttom_template(myUser)
-                            elif myUser.symptom is None:
-                                search_result = search.search_symtom_limit(message, 5)
-                                log("----------- " + str(search_result))
-                                if len(search_result) > 0:
-                                    send_message(myUser.id, "Give me a sec!")
-                                    sid = str(search_result[0]["id"])
-                                    log("************ " + sid)
-                                else:
-                                    send_message(myUser.id, "Sorry, Server appears to be busy at the moment. Please try again later.")
-
 
                             if myUser.symptom is not None:
                                 if string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
@@ -123,12 +113,24 @@ def webhook():
                                 else:
                                     myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
                                     response = str(myUser.diagnosis.question.text.encode('utf8'))
+                                    if "image_url" in myUser.diagnosis.question.extras:
+                                        send_message_image(myUser.id, myUser.diagnosis.question.extras["image_url"])
                                     if str(myUser.diagnosis.question.type) == "group_single" or str(myUser.diagnosis.question.type) == "group_multiple":
                                         response = response + "\n " + str(myUser.diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                     for x in myUser.diagnosis.question.items[0]["choices"]:
                                         response = response + "\n - " + str(x["label"])
                                     send_message(myUser.id, response)
 #                                log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
+                            else:
+                                search_result = search.search_symtom_limit(message, 5)
+                                log("----------- " + str(search_result))
+                                if len(search_result) > 0:
+                                    send_message(myUser.id, "Give me a sec!")
+                                    sid = str(search_result[0]["id"])
+                                    log("************ " + sid)
+                                else:
+                                    send_message(myUser.id, "Sorry, Server appears to be busy at the moment. Please try again later.")
+                            
 
 
 
@@ -137,6 +139,8 @@ def webhook():
                                 log("-----myUser.diagnosis First Time------ " + str(myUser.diagnosis))
                                 myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
                                 response = str(myUser.diagnosis.question.text.encode('utf8'))
+                                if "image_url" in myUser.diagnosis.question.extras:
+                                    send_message_image(myUser.id, myUser.diagnosis.question.extras["image_url"])
                                 if str(myUser.diagnosis.question.type) == "group_single" or str(myUser.diagnosis.question.type) == "group_multiple":
                                     response = response + "\n " + str(myUser.diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                 for x in myUser.diagnosis.question.items[0]["choices"]:
