@@ -44,7 +44,7 @@ def webhook():
     data = request.get_json()
     log("%%%% New Message %%%% " + str(data))  # you may not want to log every incoming message in production, but it's good for testing
 
-#    global diagnosis, symptom
+    global myUsers
     myUser = user.MyUser()
     
     if "object" in data:
