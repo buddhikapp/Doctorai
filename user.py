@@ -33,7 +33,7 @@ def GetUser(userID, usersList):
             return user
     return False
 
-def CreateUser(userID)
+def CreateUser(userID):
     newUser = MyUser()
     newUser.id = userID
     r = requests.get('https://graph.facebook.com/v2.8/'+userID+
@@ -61,6 +61,6 @@ def CreateUser(userID)
     return newUser
 
 
-def RemoveUser(user, usersList)
+def RemoveUser(user, usersList):
     usersList.remove(user)
 
