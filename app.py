@@ -46,71 +46,85 @@ def webhook():
 
 #    global diagnosis, symptom
 
-    
-    if data["object"] == "page":
-        for entry in data["entry"]:
-            for messaging_event in entry["messaging"]:
-                log("********Symtom Start******** " + str(myUser.symptom))
-                
-                if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                    myUser.id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                    log("myUser.id : " + myUser.id)
-                    recipient_id = messaging_event["recipient"]["id"]
-                    log("recipient_id : " + recipient_id)
-                    message = messaging_event["postback"]["payload"]
-                    log("message : " + message)
-                    send_message(myUser.id, message)
+    if "object" in data:
+        if data["object"] == "page":
+            for entry in data["entry"]:
+                for messaging_event in entry["messaging"]:
+                    log("********Symtom Start******** " + str(myUser.symptom))
+                    
+                    if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
+                        myUser.id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+                        log("myUser.id : " + myUser.id)
+                        recipient_id = messaging_event["recipient"]["id"]
+                        log("recipient_id : " + recipient_id)
+                        message = messaging_event["postback"]["payload"]
+                        log("message : " + message)
+                        send_message(myUser.id, message)
 
-                elif messaging_event.get("message"):  # someone sent us a message
-                    myUser.id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                    recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
-                    # sort different types of messages
-                    message = messaging_event["message"]
-                    # get user info
-                    r = requests.get('https://graph.facebook.com/v2.8/'+myUser.id+
-                                     '?fields=first_name,last_name,locale,timezone,gender&access_token='
-                                     +os.environ["PAGE_ACCESS_TOKEN"])
-                    try:
-                        myUser.gender = str(r.json()["gender"])
-                    except:
-                        myUser.gender = 'male'
-                    myUser.age = 40
-                    sid = None
-                    if message.get("text"): # get message
-                        message = message["text"]
-                        if message.upper() == "DOCTORBOT" or message.upper() == "HI" or message.upper() == "HELLO":
-                            myUser.symptom = None
-                            myUser.diagnosis = None
-                            init_buttom_template(myUser.id)
-                        elif myUser.symptom is None:
-                            search_result = search.search_symtom_limit(message, 5)
-                            log("----------- " + str(search_result))
-                            if len(search_result) > 0:
-                                send_message(myUser.id, "Give me a sec!")
-                                sid = str(search_result[0]["id"])
-                                log("************ " + sid)
-                            else:
-                                send_message(myUser.id, "Sorry, Server appears to be busy at the moment. Please try again later.")
-
-
-                        if myUser.symptom is not None:
-                            if string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
-                                myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][0]["id"]))
-                            elif string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][1]["label"]).upper()) is not -1:
-                                myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][1]["id"]))
-                            elif string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][2]["label"]).upper()) is not -1:
-                                myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][2]["id"]))
-                            else:
-                                send_message(myUser.id, "Sorry, I didn't get that. Please enter your answer again.")
-                            if myUser.diagnosis.conditions[0]["probability"] > 0.25:
-                                send_message(myUser.id, "I suspect "+str(myUser.diagnosis.conditions[0]["name"])+" with a probability of "+str(myUser.diagnosis.conditions[0]["probability"]))
-                                send_message(myUser.id, "Please send me your location so I can find a doctor near you")
-                                send_message_quick_location(myUser.id)
+                    elif messaging_event.get("message"):  # someone sent us a message
+                        myUser.id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
+                        recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
+                        # sort different types of messages
+                        message = messaging_event["message"]
+                        # get user info
+                        r = requests.get('https://graph.facebook.com/v2.8/'+myUser.id+
+                                         '?fields=first_name,last_name,locale,timezone,gender&access_token='
+                                         +os.environ["PAGE_ACCESS_TOKEN"])
+                        try:
+                            myUser.gender = str(r.json()["gender"])
+                        except:
+                            myUser.gender = 'male'
+                        myUser.age = 40
+                        sid = None
+                        if message.get("text"): # get message
+                            message = message["text"]
+                            if message.upper() == "DOCTORBOT" or message.upper() == "HI" or message.upper() == "HELLO":
                                 myUser.symptom = None
-                                myUser.gender = None
-                                myUser.age = None
                                 myUser.diagnosis = None
-                            else:
+                                init_buttom_template(myUser.id)
+                            elif myUser.symptom is None:
+                                search_result = search.search_symtom_limit(message, 5)
+                                log("----------- " + str(search_result))
+                                if len(search_result) > 0:
+                                    send_message(myUser.id, "Give me a sec!")
+                                    sid = str(search_result[0]["id"])
+                                    log("************ " + sid)
+                                else:
+                                    send_message(myUser.id, "Sorry, Server appears to be busy at the moment. Please try again later.")
+
+
+                            if myUser.symptom is not None:
+                                if string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
+                                    myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][0]["id"]))
+                                elif string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][1]["label"]).upper()) is not -1:
+                                    myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][1]["id"]))
+                                elif string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][2]["label"]).upper()) is not -1:
+                                    myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][2]["id"]))
+                                else:
+                                    send_message(myUser.id, "Sorry, I didn't get that. Please enter your answer again.")
+                                if myUser.diagnosis.conditions[0]["probability"] > 0.25:
+                                    send_message(myUser.id, "I suspect "+str(myUser.diagnosis.conditions[0]["name"])+" with a probability of "+str(myUser.diagnosis.conditions[0]["probability"]))
+                                    send_message(myUser.id, "Please send me your location so I can find a doctor near you")
+                                    send_message_quick_location(myUser.id)
+                                    myUser.symptom = None
+                                    myUser.gender = None
+                                    myUser.age = None
+                                    myUser.diagnosis = None
+                                else:
+                                    myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
+                                    response = str(myUser.diagnosis.question.text.encode('utf8'))
+                                    if str(myUser.diagnosis.question.type) == "group_single" or str(myUser.diagnosis.question.type) == "group_multiple":
+                                        response = response + "\n " + str(myUser.diagnosis.question.items[0]["name"].encode('utf8')) + "? "
+                                    for x in myUser.diagnosis.question.items[0]["choices"]:
+                                        response = response + "\n - " + str(x["label"])
+                                    send_message(myUser.id, response)
+                                log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
+                            
+
+
+                            if myUser.diagnosis is None and sid is not None:
+                                myUser.diagnosis = diagnose.init_diagnose(sid,myUser.age,myUser.gender,myUser.id)
+                                log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
                                 myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
                                 response = str(myUser.diagnosis.question.text.encode('utf8'))
                                 if str(myUser.diagnosis.question.type) == "group_single" or str(myUser.diagnosis.question.type) == "group_multiple":
@@ -118,83 +132,70 @@ def webhook():
                                 for x in myUser.diagnosis.question.items[0]["choices"]:
                                     response = response + "\n - " + str(x["label"])
                                 send_message(myUser.id, response)
-                            log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
-                        
 
 
-                        if myUser.diagnosis is None and sid is not None:
-                            myUser.diagnosis = diagnose.init_diagnose(sid,myUser.age,myUser.gender,myUser.id)
-                            log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
-                            myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
-                            response = str(myUser.diagnosis.question.text.encode('utf8'))
-                            if str(myUser.diagnosis.question.type) == "group_single" or str(myUser.diagnosis.question.type) == "group_multiple":
-                                response = response + "\n " + str(myUser.diagnosis.question.items[0]["name"].encode('utf8')) + "? "
-                            for x in myUser.diagnosis.question.items[0]["choices"]:
-                                response = response + "\n - " + str(x["label"])
-                            send_message(myUser.id, response)
+                        # if message.get("text"): # get message
+                        #     message = message["text"]
+                        #     if symptom_mode:
+                        #         symptoms = 3
+                        #         print symptoms
+                        #         # if myUser.symptom == None
+                        #         #     myUser.symptom = apiai_symptom(message) # assuming user put symptom
+                        #         # elif 
 
 
-                    # if message.get("text"): # get message
-                    #     message = message["text"]
-                    #     if symptom_mode:
-                    #         symptoms = 3
-                    #         print symptoms
-                    #         # if myUser.symptom == None
-                    #         #     myUser.symptom = apiai_symptom(message) # assuming user put symptom
-                    #         # elif 
+                        #     elif alert_mode:
+                        #         pass
+                        #     else:
+                        #         if message == "Hi":
+                        #             init_buttom_template(myUser.id)
+                        #         else:
+                        #             send_message(myUser.id, "Say 'Hi' to the DoctorBot to get started!")
+
+                        elif message.get("attachments"):    # get attachment
+                            attach = message["attachments"][0]  # loop over attachments?
+                            if attach["type"] == "location":
+                                latitude = attach["payload"]["coordinates"]["lat"]
+                                longitude = attach["payload"]["coordinates"]["long"]
+                                clinic_type = "hospital"
+                                clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
+                                r = urllib.urlopen(clinicsURL)
+                                data = json.loads(r.read())
+                                hospitals = []
+                                latitudes = []
+                                longitudes = []
+                                venues = data["response"]["venues"]
+                                if len(venues) > 3:
+                                    maxi = 3
+                                else:
+                                    maxi = len(venues)
+                                for x in range(0, maxi):
+                                    hospitals.append(venues[x]["name"])
+                                    send_message(myUser.id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
+                                    latitudes.append(venues[x]["location"]["lat"])
+                                    longitudes.append(venues[x]["location"]["lng"])
+                                message = "Location: " + str(latitude) + ", " + str(longitude)
+
+                                mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key=AIzaSyBwJxBRpzx10gHVn1V1m2Cksbs8v1pQEQA&size=800x800"
+                                for y in range(0,maxi):
+                                    mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
+                                send_message(myUser.id, "And here they are on a map :)")
+                                #sendImage
+                                send_message_image(myUser.id, mapurl)
+                            elif attach["type"] == "image":
+                                image_url = attach["payload"]["url"]
+                                message = image_url#.replace("/p100x100/","/p200x200/")
+                                send_message_image(myUser.id, message)
 
 
-                    #     elif alert_mode:
-                    #         pass
-                    #     else:
-                    #         if message == "Hi":
-                    #             init_buttom_template(myUser.id)
-                    #         else:
-                    #             send_message(myUser.id, "Say 'Hi' to the DoctorBot to get started!")
+                    # if messaging_event.get("delivery"):  # delivery confirmation
+                    #     pass
 
-                    elif message.get("attachments"):    # get attachment
-                        attach = message["attachments"][0]  # loop over attachments?
-                        if attach["type"] == "location":
-                            latitude = attach["payload"]["coordinates"]["lat"]
-                            longitude = attach["payload"]["coordinates"]["long"]
-                            clinic_type = "hospital"
-                            clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
-                            r = urllib.urlopen(clinicsURL)
-                            data = json.loads(r.read())
-                            hospitals = []
-                            latitudes = []
-                            longitudes = []
-                            venues = data["response"]["venues"]
-                            if len(venues) > 3:
-                                maxi = 3
-                            else:
-                                maxi = len(venues)
-                            for x in range(0, maxi):
-                                hospitals.append(venues[x]["name"])
-                                send_message(myUser.id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
-                                latitudes.append(venues[x]["location"]["lat"])
-                                longitudes.append(venues[x]["location"]["lng"])
-                            message = "Location: " + str(latitude) + ", " + str(longitude)
-
-                            mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key=AIzaSyBwJxBRpzx10gHVn1V1m2Cksbs8v1pQEQA&size=800x800"
-                            for y in range(0,maxi):
-                                mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
-                            send_message(myUser.id, "And here they are on a map :)")
-                            #sendImage
-                            send_message_image(myUser.id, mapurl)
-                        elif attach["type"] == "image":
-                            image_url = attach["payload"]["url"]
-                            message = image_url#.replace("/p100x100/","/p200x200/")
-                            send_message_image(myUser.id, message)
-
-
-                # if messaging_event.get("delivery"):  # delivery confirmation
-                #     pass
-
-                # if messaging_event.get("optin"):  # optin confirmation
-                #     pass
-                log("********Symtom End******** " + str(myUser.symptom))
-    return "ok", 200
+                    # if messaging_event.get("optin"):  # optin confirmation
+                    #     pass
+                    log("********Symtom End******** " + str(myUser.symptom))
+    log("******** return 'OK', 200 ******** ")
+    return "OK", 200
 
 def api_ai_analysis(message):
 
