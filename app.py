@@ -61,7 +61,8 @@ def webhook():
                             myUsers.append(myUser)
                             log("User Created : " + str(myUser.id))
                     log("myUsers Lenght : " + str(len(myUsers)))
-                    log("********Symtom Start******** " + str(myUser.symptom))
+                    log("********myUser.symptom Start******** " + str(myUser.symptom))
+                    log("-----myUser.diagnosis Start------ " + str(myUser.diagnosis))
                     
                     if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
 
@@ -126,8 +127,8 @@ def webhook():
                                     for x in myUser.diagnosis.question.items[0]["choices"]:
                                         response = response + "\n - " + str(x["label"])
                                     send_message(myUser.id, response)
-                                log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
-                            
+#                                log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
+
 
 
                             if myUser.diagnosis is None and sid is not None:
@@ -202,6 +203,7 @@ def webhook():
                     # if messaging_event.get("optin"):  # optin confirmation
                     #     pass
                     log("********Symtom End******** " + str(myUser.symptom))
+                    log("-----myUser.diagnosis End------ " + str(myUser.diagnosis))
     log("******** return 'OK', 200 ******** ")
     return "OK", 200
 
