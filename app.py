@@ -98,7 +98,7 @@ def webhook():
                                     log("Dev Test User Found first_name : " + str(devTestUser.first_name))
                                     log("Dev Test User Found last_name : " + str(devTestUser.last_name))
                                     log("Dev Test User Found profile_pic : " + str(devTestUser.profile_pic))
-                                else
+                                else:
                                     log("Dev Test User Not Found id : " + str(messaging_event["sender"]["id"]))
 
                             elif myUser.symptom is not None:
