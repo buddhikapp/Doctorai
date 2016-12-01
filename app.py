@@ -87,6 +87,8 @@ def webhook():
                                 init_buttom_template(myUser)
                             elif message.upper() == "DEVCHECK":
                                 log("Dev Test myUsers Lenght : " + str(len(myUsers)))
+                                for i in range(len(myUsers)):
+                                    log(str(i) + " - " + str(myUsers[i].first_name))
                                 if user.CheckUser(messaging_event["sender"]["id"], myUsers):
                                     devTestUser = user.GetUser(messaging_event["sender"]["id"], myUsers)
                                     log("Dev Test User Found id : " + str(devTestUser.id))
