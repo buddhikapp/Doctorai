@@ -118,6 +118,7 @@ def webhook():
                                     log("Removing user : " + str(myUser.id))
                                     user.RemoveUser(myUser,myUsers)
                                     log("myUsers Lenght : " + str(len(myUsers)))
+                                    myUser = None
 
                                 else:
                                     myUser.symptom = str(myUser.diagnosis.question.items[0]["id"])
