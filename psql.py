@@ -23,7 +23,7 @@ def main():
         
     # conn.cursor will return a cursor object, you can use this cursor to perform queries
     cursor = conn.cursor()
-    print "Connected!\n"
+    print "Connected !\n"
 
 if __name__ == "__main__":
     main()
