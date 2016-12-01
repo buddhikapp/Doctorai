@@ -331,7 +331,7 @@ def init_buttom_template(userTemplate):
     else:
         welcome_message = "Hello "+userTemplate.first_name+" "+userTemplate.last_name + "! How may I help you?"
 
-    log("Sending button template to {recipient}.".format(recipient=sender_id))
+    log("Sending button template to {recipient}.".format(recipient=userTemplate.id))
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
