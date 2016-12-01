@@ -85,6 +85,19 @@ def webhook():
                                 myUser.symptom = None
                                 myUser.diagnosis = None
                                 init_buttom_template(myUser)
+                            elif message.upper() == "DEVCHECK":
+                                log("Dev Test myUsers Lenght : " + str(len(myUsers)))
+                                if user.CheckUser(messaging_event["sender"]["id"], myUsers):
+                                    devTestUser = user.GetUser(messaging_event["sender"]["id"], myUsers)
+                                    log("Dev Test User Found id : " + str(devTestUser.id))
+                                    log("Dev Test User Found symptom : " + str(devTestUser.symptom))
+                                    log("Dev Test User Found gender : " + str(devTestUser.gender))
+                                    log("Dev Test User Found diagnosis : " + str(devTestUser.diagnosis))
+                                    log("Dev Test User Found first_name : " + str(devTestUser.first_name))
+                                    log("Dev Test User Found last_name : " + str(devTestUser.last_name))
+                                    log("Dev Test User Found profile_pic : " + str(devTestUser.profile_pic))
+                                else
+                                    log("Dev Test User Not Found id : " + str(messaging_event["sender"]["id"]))
 
                             elif myUser.symptom is not None:
                                 if string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
