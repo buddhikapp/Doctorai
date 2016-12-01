@@ -45,12 +45,12 @@ def webhook():
     log("%%%% New Message %%%% " + str(data))  # you may not want to log every incoming message in production, but it's good for testing
 
     global myUsers
-    myUser = user.MyUser()
     
     if "object" in data:
         if data["object"] == "page":
             for entry in data["entry"]:
                 for messaging_event in entry["messaging"]:
+                    myUser = user.MyUser()
                     log("myUsers Lenght : " + str(len(myUsers)))
                     if messaging_event.get("postback") or messaging_event.get("message"):
                         if user.CheckUser(messaging_event["sender"]["id"], myUsers):
