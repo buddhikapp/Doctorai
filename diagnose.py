@@ -30,7 +30,7 @@ def improve_diagnosis(request,sender_id,question_id,choice_id):
 	return request
 
 
-x = init_diagnose("s_581",22,"male",22)
+#x = init_diagnose("s_581",22,"male",22)
 # question = str(x.question.text)
 
 # x.add_symptom("s_21",'present')
