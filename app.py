@@ -54,13 +54,13 @@ def webhook():
                 for messaging_event in entry["messaging"]:
                     log("myUsers Lenght : " + str(len(myUsers)))
                     if messaging_event.get("postback") or messaging_event.get("message"):
-                        if user.CheckUser(messaging_event["sender"]["id"]):
-                            myUser = user.GetUser(messaging_event["sender"]["id"])
-                            log("User Found : " + str(myUser.id))
-                        else:
-                            myUser = user.CreateUser(messaging_event["sender"]["id"])
-                            myUsers.append(myUser)
-                            log("User Created : " + str(myUser.id))
+#                        if user.CheckUser(messaging_event["sender"]["id"]):
+#                            myUser = user.GetUser(messaging_event["sender"]["id"])
+#                            log("User Found : " + str(myUser.id))
+#                        else:
+#                            myUser = user.CreateUser(messaging_event["sender"]["id"])
+#                            myUsers.append(myUser)
+#                            log("User Created : " + str(myUser.id))
 #                    log("myUsers Lenght : " + str(len(myUsers)))
 #                    log("********myUser.symptom Start******** " + str(myUser.symptom))
 #                    log("-----myUser.diagnosis Start------ " + str(myUser.diagnosis))
