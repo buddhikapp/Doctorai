@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
 def insert_user(user):
     """ insert a new user into the vendors table """
-    sql = 'insert into users (id,first_name,last_name,gender,profile_pic,age) VALUES('+user.id+',"'+user.first_name+'","'+user.last_name+'","'+user.gender+'","'+user.profile_pic+'",'+user.age+')'
+    sql = 'insert into users (id,first_name,last_name,gender,profile_pic,age) VALUES('+str(user.id)+',"'+user.first_name+'","'+user.last_name+'","'+user.gender+'","'+user.profile_pic+'",'+str(user.age)+')'
     conn = None
     vendor_id = None
     try:
@@ -126,7 +126,7 @@ def get_user(id):
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.execute('select id,first_name,last_name,gender,profile_pic,age,symptom,diagnosis FROM users where id == '+id+'')
+        cur.execute('select id,first_name,last_name,gender,profile_pic,age,symptom,diagnosis FROM users where id == '+str(id)+'')
         print("The number of users: ", cur.rowcount)
         row = cur.fetchone()
         print(row)
@@ -155,7 +155,7 @@ def is_user_available(id):
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.execute('select id,first_name,last_name FROM users where id == '+id+'')
+        cur.execute('select id,first_name,last_name FROM users where id == '+str(id)+'')
         print("The number of users: ", cur.rowcount)
         row_count = cur.rowcount
         row = cur.fetchone()
