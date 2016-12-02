@@ -4,6 +4,7 @@ import user
 import ast
 import json
 import urllib, json
+import infermedica_api
 from config import config
 
 def connect():
@@ -137,9 +138,9 @@ def get_user(id):
         Muser.gender = row[2]
         Muser.age = row[3]
         if row[4] != 'empty':
-#            dstring = str(row[4]).replace("\n", "")
-#            print(dstring)
-            Muser.diagnosis = json.loads(row[4])
+            dstring = str(row[4]).replace("\n", "")
+            print(dstring)
+            Muser.diagnosis = infermedica_api.models.diagnosis.Diagnosis(json.loads(dstring))
         Muser.first_name = row[5]
         Muser.last_name = row[6]
         Muser.profile_pic = row[7]
