@@ -39,19 +39,7 @@ if __name__ == '__main__':
 
 def create_tables():
     """ create tables in the PostgreSQL database"""
-    commands = (
-                """
-                    CREATE TABLE users (
-                    id SERIAL PRIMARY KEY,
-                    symptom VARCHAR(255),
-                    gender VARCHAR(50),
-                    age INTEGER(3),
-                    diagnosis VARCHAR(MAX),
-                    first_name VARCHAR(255),
-                    last_name VARCHAR(255),
-                    profile_pic VARCHAR(500)
-                    )
-                    """)
+    commands = ("""CREATE TABLE users (id SERIAL PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER(3),diagnosis VARCHAR(MAX),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500))""")
     conn = None
     try:
         # read the connection parameters
@@ -71,6 +59,7 @@ def create_tables():
     finally:
         if conn is not None:
             conn.close()
+            print('Database connection closed.')
 
 
 if __name__ == '__main__':
