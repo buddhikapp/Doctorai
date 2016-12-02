@@ -111,6 +111,8 @@ def webhook():
                                     log("Dev Test User Not Found id : " + str(messaging_event["sender"]["id"]))
                             elif message.upper() == "DEV CREATE TABLE MLK":
                                 psql.create_tables()
+                            elif message.upper() == "DEV DROP TABLE MLK":
+                                psql.drop_tables()
                             elif message.upper() == "DEV TEST SQLCONNECT MLK":
                                 psql.connect()
                             

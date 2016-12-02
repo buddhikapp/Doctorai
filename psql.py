@@ -48,7 +48,7 @@ def create_tables():
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         # create table one by one
-        cur.execute("create table users (id SERIAL PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER,diagnosis VARCHAR(8000),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500))")
+        cur.execute("create table users (id INTEGER PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER,diagnosis VARCHAR(8000),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500))")
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes
@@ -64,11 +64,37 @@ def create_tables():
 if __name__ == '__main__':
     create_tables()
 
+def drop_tables():
+    """ drop tables in the PostgreSQL database"""
+    
+    conn = None
+    try:
+        # read the connection parameters
+        params = config()
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        # create table one by one
+        cur.execute("drop table users")
+        # close communication with the PostgreSQL database server
+        cur.close()
+        # commit the changes
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("sql error : " + str(error))
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
 
-def insert_user(vendor_name):
-    """ insert a new vendor into the vendors table """
-    sql = """INSERT INTO vendors(vendor_name)
-        VALUES(%s) RETURNING vendor_id;"""
+
+if __name__ == '__main__':
+    drop_tables()
+
+
+def insert_user(user):
+    """ insert a new user into the vendors table """
+    sql = 'insert into users (id,first_name,last_name,gender,profile_pic,age) VALUES('+user.id+',"'+user.first_name+'","'+user.last_name+'","'+user.gender+'","'+user.profile_pic+'",'+user.age+')'
     conn = None
     vendor_id = None
     try:
@@ -79,9 +105,7 @@ def insert_user(vendor_name):
         # create a new cursor
         cur = conn.cursor()
         # execute the INSERT statement
-        cur.execute(sql, (vendor_name,))
-        # get the generated id back
-        vendor_id = cur.fetchone()[0]
+        cur.execute(sql)
         # commit the changes to the database
         conn.commit()
         # close communication with the database
@@ -92,5 +116,24 @@ def insert_user(vendor_name):
         if conn is not None:
             conn.close()
 
-    return vendor_id
 
+def get_user(id):
+    """ query data from the users table """
+    conn = None
+    row = None
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute('select id,first_name,last_name,gender,profile_pic,age,symptom,diagnosis FROM users where id == '+id+'')
+        print("The number of users: ", cur.rowcount)
+        row = cur.fetchone()
+        print(row)
+        
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+    return row

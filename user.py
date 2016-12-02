@@ -4,6 +4,7 @@ import json
 import requests
 import urllib, json
 import infermedica_api
+import psql
 api = infermedica_api.API(app_id='21794b8d', app_key='81f5f69f0cc9d2defaa3c722c0e905bf')
 #print(api.info())
 
@@ -57,8 +58,10 @@ def CreateUser(userID):
         newUser.profile_pic = ""
 
     newUser.age = 40  #Need to be impliment
-
-    return newUser
+    
+    psql.insert_user(newUser)
+    
+    return psql.get_user(newUser.id)
 
 
 def RemoveUser(user, usersList):
