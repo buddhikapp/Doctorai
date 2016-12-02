@@ -46,8 +46,6 @@ def webhook():
     data = request.get_json()
     log("%%%% New Message %%%% " + str(data))  # you may not want to log every incoming message in production, but it's good for testing
     
-    psql.connect()
-    
     global myUsers, myUser
     
     if "object" in data:
@@ -96,7 +94,7 @@ def webhook():
                                 myUser.symptom = None
                                 myUser.diagnosis = None
                                 init_buttom_template(myUser)
-                            elif message.upper() == "DEVCHECK":
+                            elif message.upper() == "DEV MYUSER":
                                 log("Dev Test myUsers Lenght : " + str(len(myUsers)))
                                 for i in range(len(myUsers)):
                                     log(str(i) + " - " + str(myUsers[i].first_name))
@@ -111,6 +109,11 @@ def webhook():
                                     log("Dev Test User Found profile_pic : " + str(devTestUser.profile_pic))
                                 else:
                                     log("Dev Test User Not Found id : " + str(messaging_event["sender"]["id"]))
+                            elif message.upper() == "DEV CREATE TABLE MLK":
+                                psql.create_tables()
+                            elif message.upper() == "DEV TEST SQLCONNECT MLK":
+                                psql.connect()
+                            
 
                             elif myUser.symptom is not None:
                                 if string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
