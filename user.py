@@ -41,11 +41,11 @@ def CreateUser(userID):
     try:
         newUser.first_name = str(r.json()["first_name"])
     except:
-        newUser.first_name = ""
+        newUser.first_name = " "
     try:
         newUser.last_name = str(r.json()["last_name"])
     except:
-        newUser.last_name = ""
+        newUser.last_name = " "
     try:
         newUser.gender = str(r.json()["gender"])
     except:
@@ -53,7 +53,7 @@ def CreateUser(userID):
     try:
         newUser.profile_pic = str(r.json()["profile_pic"])
     except:
-        newUser.profile_pic = ""
+        newUser.profile_pic = " "
 
     newUser.age = 40  #Need to be impliment
     
