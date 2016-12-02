@@ -140,7 +140,7 @@ def get_user(id):
         if row[4] != 'empty':
             dstring = str(row[4]).replace("\n", "")
             print(dstring)
-            Muser.diagnosis = infermedica_api.models.diagnosis.Diagnosis(json.loads(dstring))
+            Muser.diagnosis = infermedica_api.models.diagnosis.Diagnosis(dstring)
         Muser.first_name = row[5]
         Muser.last_name = row[6]
         Muser.profile_pic = row[7]
