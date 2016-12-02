@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
 def create_tables():
     """ create tables in the PostgreSQL database"""
-    commands = ("CREATE TABLE users (id SERIAL PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER(3),diagnosis VARCHAR(MAX),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500))")
+    
     conn = None
     try:
         # read the connection parameters
@@ -48,8 +48,7 @@ def create_tables():
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         # create table one by one
-        for command in commands:
-            cur.execute(command)
+        cur.execute("create table users (id SERIAL PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER(3),diagnosis VARCHAR(MAX),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500))")
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes
