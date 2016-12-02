@@ -135,7 +135,9 @@ def get_user(id):
         Muser.gender = row[2]
         Muser.age = row[3]
         if row[4] != 'empty':
-            Muser.diagnosis = ast.literal_eval(str(row[4]).replace("\n", ""))
+            row[4] = str(row[4]).replace("\n", "")
+            print(row[4])
+            Muser.diagnosis = ast.literal_eval(row[4])
         Muser.first_name = row[5]
         Muser.last_name = row[6]
         Muser.profile_pic = row[7]
