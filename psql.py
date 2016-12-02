@@ -125,18 +125,18 @@ def get_user(id):
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.execute("select id,first_name,last_name,gender,profile_pic,age,symptom,diagnosis FROM users where id = "+str(id))
+        cur.execute("select id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic FROM users where id = "+str(id))
         print("The number of users: ", cur.rowcount)
         row = cur.fetchone()
         print(row)
-        Muser.id = row.id
-        Muser.symptom = row.symptom
-        Muser.gender = row.gender
-        Muser.age = row.age
-        Muser.diagnosis = row.diagnosis
-        Muser.first_name = row.first_name
-        Muser.last_name = row.last_name
-        Muser.profile_pic = row.profile_pic
+        Muser.id = row[0]
+        Muser.symptom = row[1]
+        Muser.gender = row[2]
+        Muser.age = row[3]
+        Muser.diagnosis = row[4]
+        Muser.first_name = row[5]
+        Muser.last_name = row[6]
+        Muser.profile_pic = row[7]
         
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
