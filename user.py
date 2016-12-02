@@ -13,13 +13,13 @@ class MyUser:
     def __init__(self):
 #        self.data = []
         self.id = None
-        self.symptom = None
-        self.gender = None
+        self.symptom = 'empty'
+        self.gender = 'empty'
         self.age = None
-        self.diagnosis = None
-        self.first_name = None
-        self.last_name = None
-        self.profile_pic = None
+        self.diagnosis = 'empty'
+        self.first_name = 'empty'
+        self.last_name = 'empty'
+        self.profile_pic = 'empty'
 
 
 def CheckUser(userID):
