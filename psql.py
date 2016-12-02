@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
 def insert_user(user):
     """ insert a new user into the vendors table """
-    sql = "insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic) VALUES("+str(user.id)+",'"+user.symptom+"','"+str(user.gender)+"',"+str(user.age)+",'"+str(user.diagnosis)+"','"+str(user.first_name)+"','"+str(user.last_name)+"','"+str(user.profile_pic)+"')"
+    sql = "insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic) VALUES("+str(user.id)+",'"+str(user.symptom)+"','"+str(user.gender)+"',"+str(user.age)+",'"+str(user.diagnosis)+"','"+str(user.first_name)+"','"+str(user.last_name)+"','"+str(user.profile_pic)+"')"
     conn = None
     try:
         # read database configuration
@@ -167,3 +167,31 @@ def is_user_available(id):
         if conn is not None:
             conn.close()
     return row_count
+
+
+def update_user(id, user):
+    """ update user based on the id """
+    conn = None
+    updated_rows = 0
+    try:
+        # read database configuration
+        params = config()
+        # connect to the PostgreSQL database
+        conn = psycopg2.connect(**params)
+        # create a new cursor
+        cur = conn.cursor()
+        # execute the UPDATE  statement
+        cur.execute("update users set symptom = '"+str(user.symptom)+"',gender = '"+str(user.gender)+"',age = "+str(user.age)+",diagnosis = '"+str(user.diagnosis)+"',first_name = '"+str(user.first_name)+"',last_name = '"+str(user.last_name)+"',profile_pic = '"+str(user.profile_pic)+"'  where id = "+str(id))
+        # get the number of updated rows
+        updated_rows = cur.rowcount
+        # Commit the changes to the database
+        conn.commit()
+        # Close communication with the PostgreSQL database
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("sql update_user error : " + str(error))
+    finally:
+        if conn is not None:
+            conn.close()
+
+return updated_rows

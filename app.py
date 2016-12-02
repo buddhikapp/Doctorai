@@ -61,17 +61,6 @@ def webhook():
                             myUser = user.CreateUser(messaging_event["sender"]["id"])
                             myUsers.append(myUser)
                             log("User Created : " + str(myUser.id))
-#                    log("myUsers Lenght : " + str(len(myUsers)))
-#                    log("********myUser.symptom Start******** " + str(myUser.symptom))
-#                    log("-----myUser.diagnosis Start------ " + str(myUser.diagnosis))
-#                    for i in range(len(myUsers)):
-#                        log(str(i) + " - " + str(myUsers[i].first_name))
-#                        log("Test User Found last_name : " + str(myUsers[i].last_name))
-#                        log("Test User Found id : " + str(myUsers[i].id))
-#                        log("Test User Found symptom : " + str(myUsers[i].symptom))
-#                        log("Test User Found gender : " + str(myUsers[i].gender))
-#                        log("Test User Found diagnosis : " + str(myUsers[i].diagnosis))
-#                        log("Test User Found profile_pic : " + str(myUsers[i].profile_pic))
 
                     if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
 
@@ -93,6 +82,10 @@ def webhook():
                             if message.upper() == "DOCTORBOT" or message.upper() == "HI" or message.upper() == "HELLO":
                                 myUser.symptom = None
                                 myUser.diagnosis = None
+                                if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
+                                    log("Error : User not found for update id. : " + str(messaging_event["sender"]["id"]))
+                                else:
+                                    log("Success : User updated. id : " + str(messaging_event["sender"]["id"]))
                                 init_buttom_template(myUser)
                             elif message.upper() == "DEV MYUSER":
                                 log("Dev Test myUsers Lenght : " + str(len(myUsers)))
@@ -117,7 +110,7 @@ def webhook():
                                 psql.connect()
                             
 
-                            elif myUser.symptom is not None:
+                            elif myUser.symptom != 'empty':
                                 if string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
                                     myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][0]["id"]))
                                 elif string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][1]["label"]).upper()) is not -1:
@@ -126,19 +119,27 @@ def webhook():
                                     myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][2]["id"]))
                                 else:
                                     send_message(myUser.id, "Sorry, I didn't get that. Please enter your answer again.")
+                                
+                                if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
+                                    log("Error : User not found for update. id : " + str(messaging_event["sender"]["id"]))
+                                else:
+                                    log("Success : User updated. id : " + str(messaging_event["sender"]["id"]))
+                                
                                 if myUser.diagnosis.conditions[0]["probability"] > 0.25:
                                     send_message(myUser.id, "I suspect "+str(myUser.diagnosis.conditions[0]["name"])+" with a probability of "+str(myUser.diagnosis.conditions[0]["probability"]))
                                     send_message(myUser.id, "Please send me your location so I can find a doctor near you")
                                     send_message_quick_location(myUser.id)
-#                                    myUser.symptom = None
-#                                    myUser.gender = None
-#                                    myUser.age = None
-#                                    myUser.diagnosis = None
-
-                                    log("myUsers Lenght : " + str(len(myUsers)))
-                                    log("Removing user : " + str(myUser.id))
-                                    user.RemoveUser(myUser,myUsers)
-                                    log("myUsers Lenght : " + str(len(myUsers)))
+                                    
+                                    myUser.symptom = None
+                                    myUser.diagnosis = None
+                                    if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
+                                        log("Error : User not found for update. id : " + str(messaging_event["sender"]["id"]))
+                                    else:
+                                        log("Success : User updated. id : " + str(messaging_event["sender"]["id"]))
+#                                    log("myUsers Lenght : " + str(len(myUsers)))
+#                                    log("Removing user : " + str(myUser.id))
+#                                    user.RemoveUser(myUser,myUsers)
+#                                    log("myUsers Lenght : " + str(len(myUsers)))
                                     myUser = user.MyUser()
 
                                 else:
@@ -151,9 +152,13 @@ def webhook():
                                     for x in myUser.diagnosis.question.items[0]["choices"]:
                                         response = response + "\n - " + str(x["label"])
                                     send_message(myUser.id, response)
+                                    if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
+                                        log("Error : User not found for update. id : " + str(messaging_event["sender"]["id"]))
+                                    else:
+                                        log("Success : User updated. id : " + str(messaging_event["sender"]["id"]))
 #                                log("-----myUser.diagnosis------ " + str(myUser.diagnosis))
 
-                            elif myUser.diagnosis is None:
+                            elif myUser.diagnosis == 'empty':
                                 search_result = search.search_symtom_limit(message, 5)
                                 log("----------- " + str(search_result))
                                 if len(search_result) > 0:
@@ -172,7 +177,10 @@ def webhook():
                                     for x in myUser.diagnosis.question.items[0]["choices"]:
                                         response = response + "\n - " + str(x["label"])
                                     send_message(myUser.id, response)
-                                    
+                                    if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
+                                        log("Error : User not found for update. id : " + str(messaging_event["sender"]["id"]))
+                                    else:
+                                        log("Success : User updated. id : " + str(messaging_event["sender"]["id"]))
                                 else:
                                     send_message(myUser.id, "Sorry, Server appears to be busy at the moment. Please try again later.")
 
