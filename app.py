@@ -53,7 +53,7 @@ def webhook():
             for entry in data["entry"]:
                 for messaging_event in entry["messaging"]:
                     log("myUsers Lenght : " + str(len(myUsers)))
-                    if messaging_event.get("postback") or messaging_event.get("message"):
+#                    if messaging_event.get("postback") or messaging_event.get("message"):
 #                        if user.CheckUser(messaging_event["sender"]["id"]):
 #                            myUser = user.GetUser(messaging_event["sender"]["id"])
 #                            log("User Found : " + str(myUser.id))
