@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
 def insert_user(user):
     """ insert a new user into the vendors table """
-    sql = 'insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic) VALUES('+str(user.id)+','+str(user.symptom)+',"'+str(user.gender)+'",'+str(user.age)+',"'+str(user.diagnosis)+'","'+str(user.first_name)+'","'+str(user.last_name)+'","'+str(user.profile_pic)+'")'
+    sql = 'insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic) VALUES('+str(user.id)+',"'+str(user.symptom)+'","'+str(user.gender)+'",'+str(user.age)+',"'+str(user.diagnosis)+'","'+str(user.first_name)+'","'+str(user.last_name)+'","'+str(user.profile_pic)+'")'
     conn = None
     try:
         # read database configuration
