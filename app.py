@@ -125,7 +125,7 @@ def webhook():
                                 else:
                                     log("Success : User updated. id : " + str(messaging_event["sender"]["id"]))
                                 
-                                if myUser.diagnosis.conditions[0]["probability"] > 0.25:
+                                if myUser.diagnosis.conditions[0]["probability"] > 0.25 and myUser.question_count > 3:
                                     send_message(myUser.id, "I suspect "+str(myUser.diagnosis.conditions[0]["name"])+" with a probability of "+str(myUser.diagnosis.conditions[0]["probability"]))
                                     send_message(myUser.id, "Please send me your location so I can find a doctor near you")
                                     send_message_quick_location(myUser.id)
@@ -151,6 +151,7 @@ def webhook():
                                         response = response + "\n " + str(myUser.diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                     for x in myUser.diagnosis.question.items[0]["choices"]:
                                         response = response + "\n - " + str(x["label"])
+                                    myUser.question_count = myUser.question_count + 1
                                     send_message(myUser.id, response)
                                     if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
                                         log("Error : User not found for update. id : " + str(messaging_event["sender"]["id"]))
@@ -176,6 +177,7 @@ def webhook():
                                         response = response + "\n " + str(myUser.diagnosis.question.items[0]["name"].encode('utf8')) + "? "
                                     for x in myUser.diagnosis.question.items[0]["choices"]:
                                         response = response + "\n - " + str(x["label"])
+                                    myUser.question_count = myUser.question_count + 1
                                     send_message(myUser.id, response)
                                     if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
                                         log("Error : User not found for update. id : " + str(messaging_event["sender"]["id"]))

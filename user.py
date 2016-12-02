@@ -20,6 +20,7 @@ class MyUser:
         self.first_name = 'empty'
         self.last_name = 'empty'
         self.profile_pic = 'empty'
+        self.question_count = 0
 
 
 def CheckUser(userID):
@@ -58,6 +59,7 @@ def CreateUser(userID):
     newUser.symptom = "empty"
     newUser.diagnosis = "empty"
     newUser.age = 40  #Need to be impliment
+    newUser.question_count = 0;
     
     psql.insert_user(newUser)
     

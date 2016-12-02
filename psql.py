@@ -50,7 +50,7 @@ def create_tables():
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         # create table one by one
-        cur.execute("create table users (id bigint PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER,diagnosis VARCHAR(8000),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500))")
+        cur.execute("create table users (id bigint PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER,diagnosis VARCHAR(8000),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500),question_count INTEGER)")
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes
@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
 def insert_user(user):
     """ insert a new user into the vendors table """
-    sql = "insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic) VALUES("+str(user.id)+",'"+str(user.symptom)+"','"+str(user.gender)+"',"+str(user.age)+",'"+str(user.diagnosis)+"','"+str(user.first_name)+"','"+str(user.last_name)+"','"+str(user.profile_pic)+"')"
+    sql = "insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic,question_count) VALUES("+str(user.id)+",'"+str(user.symptom)+"','"+str(user.gender)+"',"+str(user.age)+",'"+str(user.diagnosis)+"','"+str(user.first_name)+"','"+str(user.last_name)+"','"+str(user.profile_pic)+"',"+str(user.question_count)+")"
     conn = None
     try:
         # read database configuration
@@ -139,6 +139,7 @@ def get_user(id):
         Muser.first_name = row[5]
         Muser.last_name = row[6]
         Muser.profile_pic = row[7]
+        Muser.question_count = row[8]
         
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -183,7 +184,7 @@ def update_user(id, user):
         # create a new cursor
         cur = conn.cursor()
         # execute the UPDATE  statement
-        cur.execute("update users set symptom = '"+str(user.symptom)+"',gender = '"+str(user.gender)+"',age = "+str(user.age)+",diagnosis = '"+str(user.diagnosis)+"',first_name = '"+str(user.first_name)+"',last_name = '"+str(user.last_name)+"',profile_pic = '"+str(user.profile_pic)+"'  where id = "+str(id))
+        cur.execute("update users set symptom = '"+str(user.symptom)+"',gender = '"+str(user.gender)+"',age = "+str(user.age)+",diagnosis = '"+str(user.diagnosis)+"',first_name = '"+str(user.first_name)+"',last_name = '"+str(user.last_name)+"',profile_pic = '"+str(user.profile_pic)+"',question_count = "+str(user.question_count)+"  where id = "+str(id))
         # get the number of updated rows
         updated_rows = cur.rowcount
         # Commit the changes to the database
