@@ -142,7 +142,7 @@ def get_user(id):
             dstring = str(row[4]).replace("\n", "")
             print(dstring)
             diag_dict = json.loads(dstring)
-            Muser.diagnosis = init_diagnose(str(diag_dict["symptoms"][0]["id"]),Muser.age,Muser.gender,Muser.id)
+            Muser.diagnosis = infermedica_api.models.diagnosis.update_from_api(diag_dict)
             
         Muser.first_name = row[5]
         Muser.last_name = row[6]
