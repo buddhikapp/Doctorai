@@ -49,7 +49,7 @@ def create_tables():
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         # create table one by one
-        cur.execute("create table users (id INTEGER PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER,diagnosis VARCHAR(8000),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500))")
+        cur.execute("create table users (id bigint PRIMARY KEY,symptom VARCHAR(255),gender VARCHAR(50),age INTEGER,diagnosis VARCHAR(8000),first_name VARCHAR(255),last_name VARCHAR(255),profile_pic VARCHAR(500))")
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes
