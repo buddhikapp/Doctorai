@@ -125,7 +125,7 @@ def get_user(id):
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.execute('select id,first_name,last_name,gender,profile_pic,age,symptom,diagnosis FROM users where id = '+str(id)+'')
+        cur.execute("select id,first_name,last_name,gender,profile_pic,age,symptom,diagnosis FROM users where id = "+str(id))
         print("The number of users: ", cur.rowcount)
         row = cur.fetchone()
         print(row)
@@ -154,7 +154,7 @@ def is_user_available(id):
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.execute('select id,first_name,last_name FROM users where id = '+str(id)+'')
+        cur.execute("select id,first_name,last_name FROM users where id = "+str(id))
         print("The number of users: ", cur.rowcount)
         row_count = cur.rowcount
         row = cur.fetchone()
