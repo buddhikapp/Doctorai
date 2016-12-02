@@ -28,7 +28,7 @@ def connect():
         # close the communication with the PostgreSQL
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
-        print("sql error : " + str(error))
+        print("sql connect error : " + str(error))
     finally:
         if conn is not None:
             conn.close()
@@ -55,7 +55,7 @@ def create_tables():
         # commit the changes
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
-        print("sql error : " + str(error))
+        print("sql create_tables error : " + str(error))
     finally:
         if conn is not None:
             conn.close()
@@ -82,7 +82,7 @@ def drop_tables():
         # commit the changes
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
-        print("sql error : " + str(error))
+        print("sql drop_tables error : " + str(error))
     finally:
         if conn is not None:
             conn.close()
@@ -95,9 +95,8 @@ if __name__ == '__main__':
 
 def insert_user(user):
     """ insert a new user into the vendors table """
-    sql = 'insert into users (id,first_name,last_name,gender,profile_pic,age) VALUES('+str(user.id)+',"'+user.first_name+'","'+user.last_name+'","'+user.gender+'","'+user.profile_pic+'",'+str(user.age)+')'
+    sql = 'insert into users (id,first_name,last_name,gender,profile_pic,age) VALUES('+str(user.id)+',"'+str(user.first_name)+'","'+str(user.last_name)+'","'+str(user.gender)+'","'+str(user.profile_pic)+'",'+str(user.age)+')'
     conn = None
-    vendor_id = None
     try:
         # read database configuration
         params = config()
@@ -112,7 +111,7 @@ def insert_user(user):
         # close communication with the database
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
-        print("sql error : " + str(error))
+        print("sql insert_user error : " + str(error))
     finally:
         if conn is not None:
             conn.close()
@@ -141,7 +140,7 @@ def get_user(id):
         
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        print("sql get_user error : " + str(error))
     finally:
         if conn is not None:
             conn.close()
@@ -163,7 +162,7 @@ def is_user_available(id):
         
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        print("sql is_user_available error : " + str(error))
     finally:
         if conn is not None:
             conn.close()
