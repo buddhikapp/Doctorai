@@ -53,26 +53,26 @@ def webhook():
             for entry in data["entry"]:
                 for messaging_event in entry["messaging"]:
                     log("myUsers Lenght : " + str(len(myUsers)))
-                    if messaging_event.get("postback") or messaging_event.get("message"):
-                        if user.CheckUser(messaging_event["sender"]["id"], myUsers):
-                            myUser = user.GetUser(messaging_event["sender"]["id"], myUsers)
-                            log("User Found : " + str(myUser.id))
-                        else:
-                            myUser = user.CreateUser(messaging_event["sender"]["id"])
-                            myUsers.append(myUser)
-                            log("User Created : " + str(myUser.id))
-                    log("myUsers Lenght : " + str(len(myUsers)))
-                    log("********myUser.symptom Start******** " + str(myUser.symptom))
-                    log("-----myUser.diagnosis Start------ " + str(myUser.diagnosis))
-                    for i in range(len(myUsers)):
-                        log(str(i) + " - " + str(myUsers[i].first_name))
-                        log("Test User Found last_name : " + str(myUsers[i].last_name))
-                        log("Test User Found id : " + str(myUsers[i].id))
-                        log("Test User Found symptom : " + str(myUsers[i].symptom))
-                        log("Test User Found gender : " + str(myUsers[i].gender))
-                        log("Test User Found diagnosis : " + str(myUsers[i].diagnosis))
-                        log("Test User Found profile_pic : " + str(myUsers[i].profile_pic))
-                    
+#                    if messaging_event.get("postback") or messaging_event.get("message"):
+#                        if user.CheckUser(messaging_event["sender"]["id"], myUsers):
+#                            myUser = user.GetUser(messaging_event["sender"]["id"], myUsers)
+#                            log("User Found : " + str(myUser.id))
+#                        else:
+#                            myUser = user.CreateUser(messaging_event["sender"]["id"])
+#                            myUsers.append(myUser)
+#                            log("User Created : " + str(myUser.id))
+#                    log("myUsers Lenght : " + str(len(myUsers)))
+#                    log("********myUser.symptom Start******** " + str(myUser.symptom))
+#                    log("-----myUser.diagnosis Start------ " + str(myUser.diagnosis))
+#                    for i in range(len(myUsers)):
+#                        log(str(i) + " - " + str(myUsers[i].first_name))
+#                        log("Test User Found last_name : " + str(myUsers[i].last_name))
+#                        log("Test User Found id : " + str(myUsers[i].id))
+#                        log("Test User Found symptom : " + str(myUsers[i].symptom))
+#                        log("Test User Found gender : " + str(myUsers[i].gender))
+#                        log("Test User Found diagnosis : " + str(myUsers[i].diagnosis))
+#                        log("Test User Found profile_pic : " + str(myUsers[i].profile_pic))
+
                     if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
 
                         recipient_id = messaging_event["recipient"]["id"]
