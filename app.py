@@ -80,8 +80,8 @@ def webhook():
                         if message.get("text"): # get message
                             message = message["text"]
                             if message.upper() == "DOCTORBOT" or message.upper() == "HI" or message.upper() == "HELLO":
-                                myUser.symptom = None
-                                myUser.diagnosis = None
+                                myUser.symptom = 'empty'
+                                myUser.diagnosis = 'empty'
                                 if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
                                     log("Error : User not found for update id. : " + str(messaging_event["sender"]["id"]))
                                 else:
@@ -130,8 +130,8 @@ def webhook():
                                     send_message(myUser.id, "Please send me your location so I can find a doctor near you")
                                     send_message_quick_location(myUser.id)
                                     
-                                    myUser.symptom = None
-                                    myUser.diagnosis = None
+                                    myUser.symptom = 'empty'
+                                    myUser.diagnosis = 'empty'
                                     if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
                                         log("Error : User not found for update. id : " + str(messaging_event["sender"]["id"]))
                                     else:

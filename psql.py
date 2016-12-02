@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import psycopg2
 import user
+import ast
 from config import config
 
 def connect():
@@ -133,7 +134,7 @@ def get_user(id):
         Muser.symptom = row[1]
         Muser.gender = row[2]
         Muser.age = row[3]
-        Muser.diagnosis = row[4]
+        Muser.diagnosis = ast.literal_eval(row[4])
         Muser.first_name = row[5]
         Muser.last_name = row[6]
         Muser.profile_pic = row[7]
