@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
 def insert_user(user):
     """ insert a new user into the vendors table """
-    sql = "insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic,question_count) VALUES("+str(user.id)+",'"+str(user.symptom)+"','"+str(user.gender)+"',"+str(user.age)+",'"+str(user.diagnosis).replace("'", "")+"','"+str(user.first_name).replace("'", "")+"','"+str(user.last_name).replace("'", "")+"','"+str(user.profile_pic)+"',"+str(user.question_count)+")"
+    sql = "insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic,question_count) VALUES("+str(user.id)+",'"+str(user.symptom)+"','"+str(user.gender)+"',"+str(user.age)+",'"+json.dumps(user.diagnosis)+"','"+str(user.first_name).replace("'", "")+"','"+str(user.last_name).replace("'", "")+"','"+str(user.profile_pic)+"',"+str(user.question_count)+")"
     conn = None
     try:
         # read database configuration
@@ -135,9 +135,9 @@ def get_user(id):
         Muser.gender = row[2]
         Muser.age = row[3]
         if row[4] != 'empty':
-            dstring = str(row[4]).replace("\n", "")
-            print(dstring)
-            Muser.diagnosis = ast.literal_eval(dstring)
+#            dstring = str(row[4]).replace("\n", "")
+#            print(dstring)
+            Muser.diagnosis = json.loads(row[4])
         Muser.first_name = row[5]
         Muser.last_name = row[6]
         Muser.profile_pic = row[7]
@@ -186,7 +186,7 @@ def update_user(id, user):
         # create a new cursor
         cur = conn.cursor()
         # execute the UPDATE  statement
-        cur.execute("update users set symptom = '"+str(user.symptom)+"',gender = '"+str(user.gender)+"',age = "+str(user.age)+",diagnosis = '"+str(user.diagnosis).replace("'", "")+"',first_name = '"+str(user.first_name)+"',last_name = '"+str(user.last_name)+"',profile_pic = '"+str(user.profile_pic)+"',question_count = "+str(user.question_count)+"  where id = "+str(id))
+        cur.execute("update users set symptom = '"+str(user.symptom)+"',gender = '"+str(user.gender)+"',age = "+str(user.age)+",diagnosis = '"+json.dumps(user.diagnosis)+"',first_name = '"+str(user.first_name)+"',last_name = '"+str(user.last_name)+"',profile_pic = '"+str(user.profile_pic)+"',question_count = "+str(user.question_count)+"  where id = "+str(id))
         # get the number of updated rows
         updated_rows = cur.rowcount
         # Commit the changes to the database
