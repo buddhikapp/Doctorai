@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import psycopg2
+import user
 from config import config
 
 def connect():
@@ -120,13 +121,43 @@ def insert_user(user):
 def get_user(id):
     """ query data from the users table """
     conn = None
-    row = None
+    user = user.MyUser()
     try:
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         cur.execute('select id,first_name,last_name,gender,profile_pic,age,symptom,diagnosis FROM users where id == '+id+'')
         print("The number of users: ", cur.rowcount)
+        row = cur.fetchone()
+        print(row)
+        user.id = row.id
+        user.symptom = row.symptom
+        user.gender = row.gender
+        user.age = row.age
+        user.diagnosis = row.diagnosis
+        user.first_name = row.first_name
+        user.last_name = row.last_name
+        user.profile_pic = row.profile_pic
+        
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+    return user
+
+def is_user_available(id):
+    """ query data from the users table """
+    conn = None
+    row_count = 0
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute('select id,first_name,last_name FROM users where id == '+id+'')
+        print("The number of users: ", cur.rowcount)
+        row_count = cur.rowcount
         row = cur.fetchone()
         print(row)
         
@@ -136,4 +167,4 @@ def get_user(id):
     finally:
         if conn is not None:
             conn.close()
-    return row
+    return row_count

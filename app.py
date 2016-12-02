@@ -53,14 +53,14 @@ def webhook():
             for entry in data["entry"]:
                 for messaging_event in entry["messaging"]:
                     log("myUsers Lenght : " + str(len(myUsers)))
-#                    if messaging_event.get("postback") or messaging_event.get("message"):
-#                        if user.CheckUser(messaging_event["sender"]["id"], myUsers):
-#                            myUser = user.GetUser(messaging_event["sender"]["id"], myUsers)
-#                            log("User Found : " + str(myUser.id))
-#                        else:
-#                            myUser = user.CreateUser(messaging_event["sender"]["id"])
-#                            myUsers.append(myUser)
-#                            log("User Created : " + str(myUser.id))
+                    if messaging_event.get("postback") or messaging_event.get("message"):
+                        if user.CheckUser(messaging_event["sender"]["id"]):
+                            myUser = user.GetUser(messaging_event["sender"]["id"])
+                            log("User Found : " + str(myUser.id))
+                        else:
+                            myUser = user.CreateUser(messaging_event["sender"]["id"])
+                            myUsers.append(myUser)
+                            log("User Created : " + str(myUser.id))
 #                    log("myUsers Lenght : " + str(len(myUsers)))
 #                    log("********myUser.symptom Start******** " + str(myUser.symptom))
 #                    log("-----myUser.diagnosis Start------ " + str(myUser.diagnosis))
@@ -98,8 +98,8 @@ def webhook():
                                 log("Dev Test myUsers Lenght : " + str(len(myUsers)))
                                 for i in range(len(myUsers)):
                                     log(str(i) + " - " + str(myUsers[i].first_name))
-                                if user.CheckUser(messaging_event["sender"]["id"], myUsers):
-                                    devTestUser = user.GetUser(messaging_event["sender"]["id"], myUsers)
+                                if user.CheckUser(messaging_event["sender"]["id"]):
+                                    devTestUser = user.GetUser(messaging_event["sender"]["id"])
                                     log("Dev Test User Found id : " + str(devTestUser.id))
                                     log("Dev Test User Found symptom : " + str(devTestUser.symptom))
                                     log("Dev Test User Found gender : " + str(devTestUser.gender))

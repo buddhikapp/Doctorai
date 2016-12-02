@@ -22,17 +22,15 @@ class MyUser:
         self.profile_pic = None
 
 
-def CheckUser(userID, usersList):
-    for user in usersList:
-        if user.id == userID:
-            return True
-    return False
+def CheckUser(userID):
+    row_count = psql.is_user_available(userID)
+    if row_count == 1:
+        return True
+    else:
+        return False
 
-def GetUser(userID, usersList):
-    for user in usersList:
-        if user.id == userID:
-            return user
-    return MyUser()
+def GetUser(userID):
+    return psql.get_user(userID)
 
 def CreateUser(userID):
     newUser = MyUser()
