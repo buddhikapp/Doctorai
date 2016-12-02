@@ -144,6 +144,8 @@ def get_user(id):
             diag_dict = json.loads(dstring)
             request = infermedica_api.Diagnosis(sex=Muser.gender, age=Muser.age)
             print("-----diag_dict get_user------ " + str(diag_dict))
+            diag_dict["case_id"] = 'null'
+            diag_dict["evaluation_time"] = 'null'
             Muser.diagnosis = request.update_from_api(diag_dict)
             print("-----Muser.diagnosis get_user------ " + str(Muser.diagnosis))
         Muser.first_name = row[5]
