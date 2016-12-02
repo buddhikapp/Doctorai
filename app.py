@@ -82,6 +82,7 @@ def webhook():
                             if message.upper() == "DOCTORBOT" or message.upper() == "HI" or message.upper() == "HELLO":
                                 myUser.symptom = 'empty'
                                 myUser.diagnosis = 'empty'
+                                myUser.question_count = 0
                                 if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
                                     log("Error : User not found for update id. : " + str(messaging_event["sender"]["id"]))
                                 else:
@@ -132,6 +133,7 @@ def webhook():
                                     
                                     myUser.symptom = 'empty'
                                     myUser.diagnosis = 'empty'
+                                    myUser.question_count = 0
                                     if psql.update_user(messaging_event["sender"]["id"],myUser) == 0:
                                         log("Error : User not found for update. id : " + str(messaging_event["sender"]["id"]))
                                     else:
