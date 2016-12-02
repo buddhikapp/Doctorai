@@ -194,4 +194,4 @@ def update_user(id, user):
         if conn is not None:
             conn.close()
 
-return updated_rows
+    return updated_rows
