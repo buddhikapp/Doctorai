@@ -104,5 +104,5 @@ def insert_user(vendor_name):
         if conn is not None:
             conn.close()
 
-return vendor_id
+    return vendor_id
 
