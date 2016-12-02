@@ -110,7 +110,7 @@ def webhook():
                                 psql.connect()
                             
 
-                            elif myUser.symptom != 'empty':
+                            elif myUser.symptom != 'empty' and myUser.diagnosis != 'empty':
                                 if string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][0]["label"]).upper()) is not -1:
                                     myUser.diagnosis = diagnose.improve_diagnosis(myUser.diagnosis,myUser.id,myUser.symptom,str(myUser.diagnosis.question.items[0]["choices"][0]["id"]))
                                 elif string.find(message.upper(),str(myUser.diagnosis.question.items[0]["choices"][1]["label"]).upper()) is not -1:
