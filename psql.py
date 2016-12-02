@@ -126,7 +126,7 @@ def get_user(id):
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.execute("select id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic FROM users where id = "+str(id))
+        cur.execute("select id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic,question_count FROM users where id = "+str(id))
         print("The number of users: ", cur.rowcount)
         row = cur.fetchone()
         print(row)
