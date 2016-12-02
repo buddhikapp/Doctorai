@@ -24,6 +24,10 @@ def init_diagnose(symptom_id,age,gender,sender_id):
 	request = api.diagnosis(request)
 	return request
 
+def add_symptom_to_diagnose(request,symptom_id):
+    request.add_symptom(symptom_id, 'present')
+    return request
+
 def improve_diagnosis(request,sender_id,question_id,choice_id):
 	request.add_symptom(question_id,choice_id)
 	request = api.diagnosis(request)
