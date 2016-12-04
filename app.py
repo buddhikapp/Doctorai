@@ -213,32 +213,34 @@ def webhook():
                             if attach["type"] == "location":
                                 latitude = attach["payload"]["coordinates"]["lat"]
                                 longitude = attach["payload"]["coordinates"]["long"]
-                                
-                                clinic_type = "hospital"
-                                clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
-                                r = urllib.urlopen(clinicsURL)
+                                revers_geo_code_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&key="+googleApiKey
+#                                clinic_type = "hospital"
+#                                clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
+#                                r = urllib.urlopen(clinicsURL)
+                                r = urllib.urlopen(revers_geo_code_url)
                                 data = json.loads(r.read())
-                                hospitals = []
-                                latitudes = []
-                                longitudes = []
-                                venues = data["response"]["venues"]
-                                if len(venues) > 3:
-                                    maxi = 3
-                                else:
-                                    maxi = len(venues)
-                                for x in range(0, maxi):
-                                    hospitals.append(venues[x]["name"])
-                                    send_message(myUser.id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
-                                    latitudes.append(venues[x]["location"]["lat"])
-                                    longitudes.append(venues[x]["location"]["lng"])
-                                message = "Location: " + str(latitude) + ", " + str(longitude)
-
-                                mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key="+googleApiKey+"&size=800x800"
-                                for y in range(0,maxi):
-                                    mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
-                                send_message(myUser.id, "And here they are on a map :)")
-                                #sendImage
-                                send_message_image(myUser.id, mapurl)
+                                log("revers_geo_code_url data : " + str(data)
+#                                hospitals = []
+#                                latitudes = []
+#                                longitudes = []
+#                                venues = data["response"]["venues"]
+#                                if len(venues) > 3:
+#                                    maxi = 3
+#                                else:
+#                                    maxi = len(venues)
+#                                for x in range(0, maxi):
+#                                    hospitals.append(venues[x]["name"])
+#                                    send_message(myUser.id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
+#                                    latitudes.append(venues[x]["location"]["lat"])
+#                                    longitudes.append(venues[x]["location"]["lng"])
+#                                message = "Location: " + str(latitude) + ", " + str(longitude)
+#
+#                                mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key="+googleApiKey+"&size=800x800"
+#                                for y in range(0,maxi):
+#                                    mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
+#                                send_message(myUser.id, "And here they are on a map :)")
+#                                #sendImage
+#                                send_message_image(myUser.id, mapurl)
                             elif attach["type"] == "image":
                                 image_url = attach["payload"]["url"]
                                 message = image_url#.replace("/p100x100/","/p200x200/")
