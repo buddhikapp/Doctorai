@@ -5,7 +5,7 @@ import requests
 import urllib, json
 import infermedica_api
 import psql
-api = infermedica_api.API(app_id='aaccd529', app_key='2507fff3b3104d61bca7f4eb7511dc7b')
+api = infermedica_api.API(app_id='21794b8d', app_key='81f5f69f0cc9d2defaa3c722c0e905bf')
 #print(api.info())
 
 class MyUser:
