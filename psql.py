@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
 def insert_user(user):
     """ insert a new user into the vendors table """
-    sql = "insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic,question_count) VALUES("+str(user.id)+",'"+str(user.symptom)+"','"+str(user.gender)+"',"+str(user.age)+",'"+str(user.diagnosis).replace("'", "")+"','"+str(user.first_name).replace("'", "")+"','"+str(user.last_name).replace("'", "")+"','"+str(user.profile_pic)+"',"+str(user.question_count)+")"
+    sql = "insert into users (id,symptom,gender,age,diagnosis,first_name,last_name,profile_pic,question_count) VALUES("+str(user.id)+",'"+str(user.symptom)+"','"+str(user.gender)+"',"+str(user.age)+",'"+str(user.diagnosis.to_dict()).replace("'", "")+"','"+str(user.first_name).replace("'", "")+"','"+str(user.last_name).replace("'", "")+"','"+str(user.profile_pic)+"',"+str(user.question_count)+")"
     conn = None
     try:
         # read database configuration
@@ -143,10 +143,14 @@ def get_user(id):
             print(dstring)
             diag_dict = json.loads(dstring)
             request = infermedica_api.Diagnosis(sex=Muser.gender, age=Muser.age)
+            Muser.diagnosis = request
             print("-----diag_dict get_user------ " + str(diag_dict))
             diag_dict["case_id"] = 'null'
             diag_dict["evaluation_time"] = 'null'
-            Muser.diagnosis = request.update_from_api(diag_dict)
+            ConditionResultList = infermedica_api.models.diagnosis.ConditionResultList()
+            ConditionResultList = ConditionResultList.from_json(diag_dict["conditions"])
+#            Muser.diagnosis = request.update_from_api(diag_dict)
+            Muser.diagnosis.conditions = ConditionResultList
             print("-----Muser.diagnosis get_user------ " + str(Muser.diagnosis))
         Muser.first_name = row[5]
         Muser.last_name = row[6]
