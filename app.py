@@ -15,6 +15,7 @@ from flask import Flask, request
 
 import infermedica_api
 
+googleApiKey = 'AIzaSyDajx797IQYukLSGkT3VwP02Qa2pyWQlEw'
 api = infermedica_api.API(app_id='21794b8d', app_key='81f5f69f0cc9d2defaa3c722c0e905bf')
 #print(api.info())
 
@@ -231,7 +232,7 @@ def webhook():
                                     longitudes.append(venues[x]["location"]["lng"])
                                 message = "Location: " + str(latitude) + ", " + str(longitude)
 
-                                mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key=AIzaSyDajx797IQYukLSGkT3VwP02Qa2pyWQlEw&size=800x800"
+                                mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key="+googleApiKey+"&size=800x800"
                                 for y in range(0,maxi):
                                     mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
                                 send_message(myUser.id, "And here they are on a map :)")
