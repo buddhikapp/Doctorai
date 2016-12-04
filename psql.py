@@ -147,8 +147,7 @@ def get_user(id):
             print("-----diag_dict get_user------ " + str(diag_dict))
             diag_dict["case_id"] = 'null'
             diag_dict["evaluation_time"] = 'null'
-            ConditionResultList = infermedica_api.models.diagnosis.ConditionResultList()
-            ConditionResultList = ConditionResultList.from_json(diag_dict["conditions"])
+            ConditionResultList = infermedica_api.models.diagnosis.ConditionResultList().from_json(diag_dict["conditions"])
 #            Muser.diagnosis = request.update_from_api(diag_dict)
             Muser.diagnosis.conditions = ConditionResultList
             print("-----Muser.diagnosis get_user------ " + str(Muser.diagnosis))
