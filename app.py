@@ -241,10 +241,10 @@ def webhook():
 #                                send_message(myUser.id, "And here they are on a map :)")
 #                                #sendImage
 #                                send_message_image(myUser.id, mapurl)
-                            elif attach["type"] == "image":
-                                image_url = attach["payload"]["url"]
-                                message = image_url#.replace("/p100x100/","/p200x200/")
-                                send_message_image(myUser.id, message)
+#                            elif attach["type"] == "image":
+#                                image_url = attach["payload"]["url"]
+#                                message = image_url#.replace("/p100x100/","/p200x200/")
+#                                send_message_image(myUser.id, message)
 
 
                     # if messaging_event.get("delivery"):  # delivery confirmation
