@@ -231,7 +231,7 @@ def webhook():
                                     longitudes.append(venues[x]["location"]["lng"])
                                 message = "Location: " + str(latitude) + ", " + str(longitude)
 
-                                mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key=AIzaSyBwJxBRpzx10gHVn1V1m2Cksbs8v1pQEQA&size=800x800"
+                                mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key=AIzaSyDajx797IQYukLSGkT3VwP02Qa2pyWQlEw&size=800x800"
                                 for y in range(0,maxi):
                                     mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
                                 send_message(myUser.id, "And here they are on a map :)")
