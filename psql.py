@@ -151,6 +151,8 @@ def get_user(id):
 #            Muser.diagnosis = request.update_from_api(diag_dict)
             Muser.diagnosis.conditions = ConditionResultList
             Muser.diagnosis.question = infermedica_api.models.diagnosis.DiagnosisQuestion().from_json(diag_dict["question"])
+            for sym in diag_dict["symptoms"]:
+                Muser.diagnosis.add_symptom(sym["id"],sym["choice_id"])
             print("-----Muser.diagnosis get_user------ " + str(Muser.diagnosis))
         Muser.first_name = row[5]
         Muser.last_name = row[6]
