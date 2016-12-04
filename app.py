@@ -219,7 +219,7 @@ def webhook():
 #                                r = urllib.urlopen(clinicsURL)
                                 r = urllib.urlopen(revers_geo_code_url)
                                 data = json.loads(r.read())
-                                log("revers_geo_code_url data : " + str(data))
+                                log("revers_geo_code_url data : " + r.read())
 #                                hospitals = []
 #                                latitudes = []
 #                                longitudes = []
