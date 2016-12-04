@@ -218,8 +218,11 @@ def webhook():
 #                                clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
 #                                r = urllib.urlopen(clinicsURL)
                                 r = urllib.urlopen(revers_geo_code_url)
-#                                data = json.loads(r.read())
-                                log("revers_geo_code_url data : " + r.read())
+                                rdata = r.read()
+                                log("revers_geo_code_url data : ")
+                                log(rdata)
+                                ddata = json.loads(rdata)
+#                                for add_com in ddata["address_components"]
 #                                hospitals = []
 #                                latitudes = []
 #                                longitudes = []
