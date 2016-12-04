@@ -4,7 +4,7 @@ import json
 import requests
 import urllib, json
 import infermedica_api
-api = infermedica_api.API(app_id='3f04e922', app_key='9a83e803469c7eaad27e9067249a3814')
+api = infermedica_api.API(app_id='21794b8d', app_key='81f5f69f0cc9d2defaa3c722c0e905bf')
 #print(api.info())
 
 def gender(sender_id):
@@ -30,7 +30,7 @@ def improve_diagnosis(request,sender_id,question_id,choice_id):
 	return request
 
 
-x = init_diagnose("s_581",22,"male",22)
+#x = init_diagnose("s_581",22,"male",22)
 # question = str(x.question.text)
 
 # x.add_symptom("s_21",'present')
