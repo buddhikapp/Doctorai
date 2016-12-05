@@ -251,7 +251,7 @@ def webhook():
                                         if ddata["rows"][0]["elements"][0]["distance"]["value"] < 10000:
                                             hospitals_distance_duration_latitude_longitude.append([hospitals[x],ddata["rows"][0]["elements"][0]["distance"]["text"],ddata["rows"][0]["elements"][0]["duration"]["text"],hospitals[x][4],hospitals[x][5], ddata["destination_addresses"]])
                                                                                                    
-                                hospitals_distance_duration_latitude_longitude = sorted(hospitals_distance_duration_latitude_longitude, key=lambda hospital: hospitals_distance_duration_latitude_longitude[2])
+#                                hospitals_distance_duration_latitude_longitude = sorted(hospitals_distance_duration_latitude_longitude, key=lambda hospital: hospitals_distance_duration_latitude_longitude[2])
                                 maxi = 0
                                 if len(hospitals_distance_duration_latitude_longitude) > 3:
                                     maxi = 3
