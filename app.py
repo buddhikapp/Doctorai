@@ -222,7 +222,10 @@ def webhook():
                                 log("revers_geo_code_url data : ")
                                 log(rdata)
                                 ddata = json.loads(rdata)
-#                                for add_com in ddata["address_components"]
+                                hospitals = []
+                                for addrs_com in ddata["results"][0]["address_components"]
+                                    hospitals.extend(psql.get_hospitals(addrs_com["long_name"]))
+                                log(len(hospitals))
 #                                hospitals = []
 #                                latitudes = []
 #                                longitudes = []
