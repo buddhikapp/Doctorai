@@ -258,7 +258,7 @@ def webhook():
                                 
                                 for x in range(0, maxi):
                                     hospital_buttom_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x])
-                                    map_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x][0],hospitals_distance_duration_latitude_longitude[x][3],hospitals_distance_duration_latitude_longitude[x][4])
+                                    map_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x][0][0],hospitals_distance_duration_latitude_longitude[x][3],hospitals_distance_duration_latitude_longitude[x][4])
                                 
                                 if len(hospitals_distance_duration_latitude_longitude) > 0:
                                     log("")
