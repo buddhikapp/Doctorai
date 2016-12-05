@@ -223,12 +223,12 @@ def webhook():
                                 for addrs_com in ddata["results"][0]["address_components"]:
                                     hospitals.extend(psql.get_hospitals(addrs_com["long_name"]))
                                 log(len(hospitals))
-                                if len(hospitals) > 5:
-                                    maxi = 5
+                                if len(hospitals) > 3:
+                                    maxi = 3
                                 else:
                                     maxi = len(hospitals)
                                 for x in range(0, maxi):
-                                    text_search_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+str(hospitals[x][2])+"&location="+str(latitude)+","+str(longitude)+"&radius=15000&key="+googleApiKey+""
+                                    text_search_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+str(hospitals[x][0]) + ". " +str(hospitals[x][2])+"&location="+str(latitude)+","+str(longitude)+"&radius=15000&key="+googleApiKey+""
                                     r = urllib.urlopen(revers_geo_code_url)
                                     rdata = r.read()
                                     log("text_search_url data : ")
