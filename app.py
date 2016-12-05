@@ -67,12 +67,16 @@ def webhook():
 
                         recipient_id = messaging_event["recipient"]["id"]
                         log("recipient_id : " + recipient_id)
-                        if messaging_event["postback"]["title"] == 'Symptom checker' or messaging_event["postback"]["title"] == 'Health alerts':
-                            message = messaging_event["postback"]["payload"]
+                        
+                        title = messaging_event["postback"]["payload"].split(":")[0]
+                        payload = messaging_event["postback"]["payload"].split(":")[1]
+                        
+                        if title == 'SymptomChecker' or title == 'HealthAlerts':
+                            message = payload
                             log("message : " + message)
                             send_message(myUser.id, message)
-                        elif messaging_event["postback"]["title"] == 'Discounts':
-                            message = messaging_event["postback"]["payload"]
+                        elif title == 'Discounts':
+                            message = payload
                             log("message : " + message)
                             send_message(myUser.id, message)
 
@@ -267,8 +271,8 @@ def webhook():
                                     data = json.loads(r.read())
                                     venues = data["response"]["venues"]
                                     maxi = 0
-                                    if len(venues) > 5:
-                                        maxi = 5
+                                    if len(venues) > 4:
+                                        maxi = 4
                                     else:
                                         maxi = len(venues)
                                     for x in range(0, maxi):
@@ -449,12 +453,12 @@ def init_buttom_template(userTemplate):
                         {
                         'type': 'postback',
                         'title': 'Symptom checker',
-                        'payload': 'In order to properly help you, I will need to ask you a few questions. What symptoms do you have?'
+                        'payload': 'SymptomChecker:In order to properly help you, I will need to ask you a few questions. What symptoms do you have?'
                         },
                         {
                         'type': 'postback',
                         'title': 'Health alerts',
-                        'payload': 'Which diseases and/or symptoms would you like to check in your local area?'
+                        'payload': 'HealthAlerts:Which diseases and/or symptoms would you like to check in your local area?'
                         }
 #                               {
 #                               "type":"web_url",
@@ -505,7 +509,7 @@ def hospital_buttom_template(sender_id, hospitals_distance_duration_latitude_lon
                              {
                              'type': 'postback',
                              'title': 'Discounts',
-                             'payload': str(hospitals_distance_duration_latitude_longitude[0][0]) + "\n" + str(hospitals_distance_duration_latitude_longitude[0][1])
+                             'payload': "Discounts:"+str(hospitals_distance_duration_latitude_longitude[0][0]) + "\n" + str(hospitals_distance_duration_latitude_longitude[0][1])
                              },
                              {
                              'type': 'web_url',
