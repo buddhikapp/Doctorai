@@ -226,7 +226,7 @@ def get_hospitals(district):
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.execute("select hospital_name,total_discount_offer,address,web_address FROM hospitals where district = '"+str(district))+"';"
+        cur.execute("select hospital_name,total_discount_offer,address,web_address FROM hospitals where district = "+str(district))+";"
         print("The number of Hospitals: ", cur.rowcount)
         row = cur.fetchone()
         
