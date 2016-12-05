@@ -249,7 +249,9 @@ def webhook():
                                     ddata = json.loads(rdata)
                                     if ddata["rows"][0]["elements"][0]["status"] == 'OK':
                                         if ddata["rows"][0]["elements"][0]["distance"]["value"] < 10000:
-                                            hospitals_distance_duration_latitude_longitude.append([hospitals[x],ddata["rows"][0]["elements"][0]["distance"]["text"],ddata["rows"][0]["elements"][0]["duration"]["text"],hospitals[x][4],hospitals[x][5]])
+                                            hospitals_distance_duration_latitude_longitude.append([hospitals[x],ddata["rows"][0]["elements"][0]["distance"]["text"],ddata["rows"][0]["elements"][0]["duration"]["text"],hospitals[x][4],hospitals[x][5], ddata["destination_addresses"])
+                                                                                                   
+                                hospitals_distance_duration_latitude_longitude = sorted(hospitals_distance_duration_latitude_longitude, key=lambda hospital: hospitals_distance_duration_latitude_longitude[2])
                                 maxi = 0
                                 if len(hospitals_distance_duration_latitude_longitude) > 3:
                                     maxi = 3
@@ -258,10 +260,10 @@ def webhook():
                                 
                                 for x in range(0, maxi):
                                     hospital_buttom_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x])
-                                    map_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x][0][0],hospitals_distance_duration_latitude_longitude[x][3],hospitals_distance_duration_latitude_longitude[x][4])
+                                    map_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x][0][0],hospitals_distance_duration_latitude_longitude[x][3],hospitals_distance_duration_latitude_longitude[x][4],hospitals_distance_duration_latitude_longitude[x][5])
                                 
                                 if len(hospitals_distance_duration_latitude_longitude) > 0:
-                                    log("")
+                                    log("Telenor hospitals not found")
                                 else:
                                     clinic_type = "hospital"
                                     clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
@@ -529,7 +531,7 @@ def hospital_buttom_template(sender_id, hospitals_distance_duration_latitude_lon
                           
     log(r.text)
 
-def map_template(sender_id, title, lat, long):
+def map_template(sender_id, title, lat, long, subtitle):
     
     
     log("Sending map template to {recipient}.".format(recipient=sender_id))
@@ -554,7 +556,8 @@ def map_template(sender_id, title, lat, long):
                              {
                              'title': str(title),
                              'image_url': "https://maps.googleapis.com/maps/api/staticmap?size=764x400&center="+str(lat)+","+str(long)+"&zoom=25&markers="+str(lat)+","+str(long)+"&key="+googleApiKey,
-                             'item_url': "https://maps.apple.com/maps?q="+str(lat)+","+str(long)+"&z=16"
+                             'item_url': "https://maps.apple.com/maps?q="+str(lat)+","+str(long)+"&z=16",
+                             'subtitle': str(subtitle)
                             }
                       ]
                 }
