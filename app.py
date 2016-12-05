@@ -75,10 +75,16 @@ def webhook():
                             message = payload
                             log("message : " + message)
                             send_message(myUser.id, message)
-                        elif title == 'Discounts':
+                        elif title == 'TonicDiscountsMain':
                             message = payload
                             log("message : " + message)
                             send_message(myUser.id, message)
+                            send_message_quick_location(myUser.id)
+                        elif title == 'TonicDiscounts':
+                            message = payload
+                            log("message : " + message)
+                            send_message(myUser.id, message)
+                        
 
                     elif messaging_event.get("message"):  # someone sent us a message
 
@@ -463,6 +469,11 @@ def init_buttom_template(userTemplate):
                         'title': 'Health alerts',
                         'payload': 'HealthAlerts:Which diseases and/or symptoms would you like to check in your local area?'
                         }
+                        {
+                        'type': 'postback',
+                        'title': 'Tonic Discounts',
+                        'payload': 'TonicDiscountsMain:Please send me your location so I can find hospitals near you..'
+                        }
 #                               {
 #                               "type":"web_url",
 #                               "url":"https://petersapparel.parseapp.com",
@@ -511,8 +522,8 @@ def hospital_buttom_template(sender_id, hospitals_distance_duration_latitude_lon
                       "buttons":[
                              {
                              'type': 'postback',
-                             'title': 'Discounts',
-                             'payload': "Discounts:"+str(hospitals_distance_duration_latitude_longitude[0][0]) + "\n" + str(hospitals_distance_duration_latitude_longitude[0][1])
+                             'title': 'Tonic Discounts',
+                             'payload': "TonicDiscounts:"+str(hospitals_distance_duration_latitude_longitude[0][0]) + "\n" + str(hospitals_distance_duration_latitude_longitude[0][1])
                              },
                              {
                              'type': 'web_url',
