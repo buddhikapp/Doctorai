@@ -468,7 +468,7 @@ def init_buttom_template(userTemplate):
                         'type': 'postback',
                         'title': 'Health alerts',
                         'payload': 'HealthAlerts:Which diseases and/or symptoms would you like to check in your local area?'
-                        }
+                        },
                         {
                         'type': 'postback',
                         'title': 'Tonic Discounts',
