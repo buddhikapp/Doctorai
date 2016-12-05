@@ -214,9 +214,6 @@ def webhook():
                                 latitude = attach["payload"]["coordinates"]["lat"]
                                 longitude = attach["payload"]["coordinates"]["long"]
                                 revers_geo_code_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+str(latitude)+","+str(longitude)+"&key="+googleApiKey+""
-#                                clinic_type = "hospital"
-#                                clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
-#                                r = urllib.urlopen(clinicsURL)
                                 r = urllib.urlopen(revers_geo_code_url)
                                 rdata = r.read()
                                 log("revers_geo_code_url data : ")
@@ -226,12 +223,25 @@ def webhook():
                                 for addrs_com in ddata["results"][0]["address_components"]:
                                     hospitals.extend(psql.get_hospitals(addrs_com["long_name"]))
                                 log(len(hospitals))
+                                if len(hospitals) > 5:
+                                    maxi = 5
+                                else:
+                                    maxi = len(hospitals)
+                                for x in range(0, maxi):
+                                    text_search_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="++"&location="+str(latitude)+","+str(longitude)+"&radius=15000&key="+googleApiKey+""
+                                    r = urllib.urlopen(revers_geo_code_url)
+                                    rdata = r.read()
+                                    log("text_search_url data : ")
+                                    log(rdata)
+#                                clinic_type = "hospital"
+#                                clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
+#                                r = urllib.urlopen(clinicsURL)
 #                                hospitals = []
 #                                latitudes = []
 #                                longitudes = []
 #                                venues = data["response"]["venues"]
-#                                if len(venues) > 3:
-#                                    maxi = 3
+#                                if len(venues) > 5:
+#                                    maxi = 5
 #                                else:
 #                                    maxi = len(venues)
 #                                for x in range(0, maxi):
