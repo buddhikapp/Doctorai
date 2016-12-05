@@ -487,37 +487,37 @@ def hospital_buttom_template(sender_id, hospitals_distance_duration_latitude_lon
         "Content-Type": "application/json"
         }
     data = json.dumps({
-                      "recipient": {
-                      "id": sender_id
-                      },
-                      "message":{
-                      "attachment":{
-                      "type":"template",
-                      "payload":{
+        "recipient": {
+            "id": sender_id
+        },
+        "message":{
+            "attachment":{
+                "type":"template",
+                "payload":{
                       "template_type":"button",
                       "text": message,
                       "buttons":[
-                                 {
-                                 'type': 'postback',
-                                 'title': 'Discounts',
-                                 'payload': str(hospitals_distance_duration_latitude_longitude[0][1])
-                                 },
-                                 {
-                                 'type': 'web_url',
-                                 'title': 'Show Website',
-                                 'url': str(hospitals_distance_duration_latitude_longitude[0][3])
-                                 }
-                                 ]
-                      }
-                      }
-                      }
-                      })
-                      r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
-                      if r.status_code != 200:
-                          log(r.status_code)
-                              log(r.text)
+                             {
+                             'type': 'postback',
+                             'title': 'Discounts',
+                             'payload': str(hospitals_distance_duration_latitude_longitude[0][1])
+                             },
+                             {
+                             'type': 'web_url',
+                             'title': 'Show Website',
+                             'url': str(hospitals_distance_duration_latitude_longitude[0][3])
+                             }
+                    ]
+                }
+            }
+        }
+    })
+    r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
                           
-log(r.text)
+    log(r.text)
 
 
 def log(message):  # simple wrapper for logging to stdout on heroku
