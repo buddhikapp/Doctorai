@@ -219,8 +219,8 @@ def webhook():
                                 revers_geo_code_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+str(latitude)+","+str(longitude)+"&key="+googleApiKey+""
                                 r = urllib.urlopen(revers_geo_code_url)
                                 rdata = r.read()
-                                log("revers_geo_code_url data : ")
-                                log(rdata)
+#                                log("revers_geo_code_url data : ")
+#                                log(rdata)
                                 ddata = json.loads(rdata)
                                 hospitals = []
                                 for addrs_com in ddata["results"][0]["address_components"]:
@@ -235,6 +235,7 @@ def webhook():
                                 for x in range(0, maxi):
                                     log("hospitals raw data : " + str(x) + " : " + str(hospitals[x]))
                                     distance_matrix_url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+str(latitude)+","+str(longitude)+"&destinations="+str(hospitals[x][4])+","+str(hospitals[x][5])+"&key="+googleApiKey+""
+                                    log(distance_matrix_url)
                                     r = urllib.urlopen(distance_matrix_url)
                                     rdata = r.read()
                                     log("distance_matrix_url data : ")
