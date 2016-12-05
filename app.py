@@ -260,7 +260,7 @@ def webhook():
                                     hospitals = []
                                     latitudes = []
                                     longitudes = []
-                                    data = json.loads(r)
+                                    data = json.loads(str(r))
                                     venues = data["response"]["venues"]
                                     maxi = 0
                                     if len(venues) > 5:
