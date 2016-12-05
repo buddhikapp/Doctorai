@@ -553,8 +553,8 @@ def map_template(sender_id, title, lat, long):
                       [
                              {
                              'title': str(title),
-                             'image_url': "https:\/\/maps.googleapis.com\/maps\/api\/staticmap?size=764x400&center="+str(lat)+","+str(long)+"&zoom=25&markers="+str(lat)+","+str(long)+"&key="+googleApiKey,
-                             'item_url': "http:\/\/maps.apple.com\/maps?q="+str(lat)+","+str(long)+"&z=16"
+                             'image_url': "https://maps.googleapis.com/maps/api/staticmap?size=764x400&center="+str(lat)+","+str(long)+"&zoom=25&markers="+str(lat)+","+str(long)+"&key="+googleApiKey,
+                             'item_url': "https://maps.apple.com/maps?q="+str(lat)+","+str(long)+"&z=16"
                             }
                       ]
                 }
