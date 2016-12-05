@@ -258,6 +258,7 @@ def webhook():
                                 
                                 for x in range(0, maxi):
                                     hospital_buttom_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x])
+                                    map_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x][0],hospitals_distance_duration_latitude_longitude[x][3],hospitals_distance_duration_latitude_longitude[x][4])
                                 
                                 if len(hospitals_distance_duration_latitude_longitude) > 0:
                                     log("")
@@ -526,6 +527,44 @@ def hospital_buttom_template(sender_id, hospitals_distance_duration_latitude_lon
         log(r.status_code)
         log(r.text)
                           
+    log(r.text)
+
+def map_template(sender_id, title, lat, long):
+    
+    
+    log("Sending map template to {recipient}.".format(recipient=sender_id))
+    
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = json.dumps({
+                  "recipient": {
+                  "id": sender_id
+                  },
+                  "message":{
+                  "attachment":{
+                  "type":"template",
+                  "payload":{
+                  "template_type":"generic",
+                  "buttons":[
+                             {
+                             'title': title,
+                             'image_url': "https:\/\/maps.googleapis.com\/maps\/api\/staticmap?size=764x400&center="+lat+","+long+"&zoom=25&markers="+lat+","+long,
+                             'item_url': "http:\/\/maps.apple.com\/maps?q="+lat+","+long+"&z=16"
+                             }
+                    ]
+                }
+            }
+        }
+    })
+    r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+    
     log(r.text)
 
 
