@@ -72,7 +72,9 @@ def webhook():
                             log("message : " + message)
                             send_message(myUser.id, message)
                         elif messaging_event["postback"]["title"] == 'Discounts':
-                            log()
+                            message = messaging_event["postback"]["payload"]
+                            log("message : " + message)
+                            send_message(myUser.id, message)
 
                     elif messaging_event.get("message"):  # someone sent us a message
 
@@ -479,7 +481,7 @@ def init_buttom_template(userTemplate):
 
 def hospital_buttom_template(sender_id, hospitals_distance_duration_latitude_longitude):
     
-    message = str(hospitals_distance_duration_latitude_longitude[0][0]) + " \n Distance : " + str(hospitals_distance_duration_latitude_longitude[1]) + " \n Duration : " + str(hospitals_distance_duration_latitude_longitude[2])
+    message = str(hospitals_distance_duration_latitude_longitude[0][0]) + " \n\tDistance : " + str(hospitals_distance_duration_latitude_longitude[1]) + " \n\tDuration : " + str(hospitals_distance_duration_latitude_longitude[2])
 
     log("Sending button template to {recipient}.".format(recipient=sender_id))
 
@@ -503,7 +505,7 @@ def hospital_buttom_template(sender_id, hospitals_distance_duration_latitude_lon
                              {
                              'type': 'postback',
                              'title': 'Discounts',
-                             'payload': str(hospitals_distance_duration_latitude_longitude[0][1])
+                             'payload': str(hospitals_distance_duration_latitude_longitude[0][0]) + "\n" + str(hospitals_distance_duration_latitude_longitude[0][1])
                              },
                              {
                              'type': 'web_url',
