@@ -223,7 +223,7 @@ def webhook():
                                 log(rdata)
                                 ddata = json.loads(rdata)
                                 hospitals = []
-                                for addrs_com in ddata["results"][0]["address_components"]
+                                for addrs_com in ddata["results"][0]["address_components"]:
                                     hospitals.extend(psql.get_hospitals(addrs_com["long_name"]))
                                 log(len(hospitals))
 #                                hospitals = []
