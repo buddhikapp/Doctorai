@@ -67,9 +67,18 @@ def webhook():
 
                         recipient_id = messaging_event["recipient"]["id"]
                         log("recipient_id : " + recipient_id)
-                        message = messaging_event["postback"]["payload"]
-                        log("message : " + message)
-                        send_message(myUser.id, message)
+                        
+                        title = messaging_event["postback"]["payload"].split(":")[0]
+                        payload = messaging_event["postback"]["payload"].split(":")[1]
+                        
+                        if title == 'SymptomChecker' or title == 'HealthAlerts':
+                            message = payload
+                            log("message : " + message)
+                            send_message(myUser.id, message)
+                        elif title == 'Discounts':
+                            message = payload
+                            log("message : " + message)
+                            send_message(myUser.id, message)
 
                     elif messaging_event.get("message"):  # someone sent us a message
 
@@ -213,31 +222,75 @@ def webhook():
                             if attach["type"] == "location":
                                 latitude = attach["payload"]["coordinates"]["lat"]
                                 longitude = attach["payload"]["coordinates"]["long"]
-                                clinic_type = "hospital"
-                                clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
-                                r = urllib.urlopen(clinicsURL)
-                                data = json.loads(r.read())
+                                revers_geo_code_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+str(latitude)+","+str(longitude)+"&key="+googleApiKey+""
+                                r = urllib.urlopen(revers_geo_code_url)
+                                rdata = r.read()
+#                                log("revers_geo_code_url data : ")
+#                                log(rdata)
+                                ddata = json.loads(rdata)
                                 hospitals = []
-                                latitudes = []
-                                longitudes = []
-                                venues = data["response"]["venues"]
-                                if len(venues) > 3:
+                                for addrs_com in ddata["results"][0]["address_components"]:
+                                    hospitals.extend(psql.get_hospitals(addrs_com["long_name"]))
+                                log(len(hospitals))
+                                maxi = 0
+                                if len(hospitals) > 10:
+                                    maxi = 10
+                                else:
+                                    maxi = len(hospitals)
+                                hospitals_distance_duration_latitude_longitude = []
+                                for x in range(0, maxi):
+                                    log("hospitals raw data : " + str(x) + " : " + str(hospitals[x]))
+                                    distance_matrix_url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+str(latitude)+","+str(longitude)+"&destinations="+str(hospitals[x][4])+","+str(hospitals[x][5])+"&key="+googleApiKey+""
+                                    log(distance_matrix_url)
+                                    r = urllib.urlopen(distance_matrix_url)
+                                    rdata = r.read()
+                                    log("distance_matrix_url data : ")
+                                    log(rdata)
+                                    ddata = json.loads(rdata)
+                                    if ddata["rows"][0]["elements"][0]["status"] == 'OK':
+                                        if ddata["rows"][0]["elements"][0]["distance"]["value"] < 10000:
+                                            hospitals_distance_duration_latitude_longitude.append([hospitals[x],ddata["rows"][0]["elements"][0]["distance"]["text"],ddata["rows"][0]["elements"][0]["duration"]["text"],hospitals[x][4],hospitals[x][5], ddata["destination_addresses"]])
+                                                                                                   
+                                hospitals_distance_duration_latitude_longitude = sorted(hospitals_distance_duration_latitude_longitude, key=lambda hospital: hospitals_distance_duration_latitude_longitude[2])
+                                maxi = 0
+                                if len(hospitals_distance_duration_latitude_longitude) > 3:
                                     maxi = 3
                                 else:
-                                    maxi = len(venues)
+                                    maxi = len(hospitals_distance_duration_latitude_longitude)
+                                
                                 for x in range(0, maxi):
-                                    hospitals.append(venues[x]["name"])
-                                    send_message(myUser.id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
-                                    latitudes.append(venues[x]["location"]["lat"])
-                                    longitudes.append(venues[x]["location"]["lng"])
-                                message = "Location: " + str(latitude) + ", " + str(longitude)
+                                    hospital_buttom_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x])
+                                    map_template(messaging_event["sender"]["id"],hospitals_distance_duration_latitude_longitude[x][0][0],hospitals_distance_duration_latitude_longitude[x][3],hospitals_distance_duration_latitude_longitude[x][4],hospitals_distance_duration_latitude_longitude[x][5])
+                                
+                                if len(hospitals_distance_duration_latitude_longitude) > 0:
+                                    log("Telenor hospitals not found")
+                                else:
+                                    clinic_type = "hospital"
+                                    clinicsURL = "https://api.foursquare.com/v2/venues/search?ll="+str(latitude)+","+str(longitude)+"&radius=15000&query="+clinic_type+"&client_id=1TCDH3ZYXC3NYNCRVL1RL4WEGDP4CHZSLPMKGCBIHAYYVJWA&client_secret=VASKTPATQLSPXIFJZQ0EZ4GDH2QAZU1QGEEZ4YDCKYA11V2J&v=20160917"
+                                    r = urllib.urlopen(clinicsURL)
+                                    hospitals = []
+                                    latitudes = []
+                                    longitudes = []
+                                    data = json.loads(r.read())
+                                    venues = data["response"]["venues"]
+                                    maxi = 0
+                                    if len(venues) > 4:
+                                        maxi = 4
+                                    else:
+                                        maxi = len(venues)
+                                    for x in range(0, maxi):
+                                        hospitals.append(venues[x]["name"])
+                                        send_message(myUser.id, "Option #"+str(x+1)+": "+venues[x]["name"].encode('utf8'))
+                                        latitudes.append(venues[x]["location"]["lat"])
+                                        longitudes.append(venues[x]["location"]["lng"])
+                                    message = "Location: " + str(latitude) + ", " + str(longitude)
 
-                                mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key="+googleApiKey+"&size=800x800"
-                                for y in range(0,maxi):
-                                    mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
-                                send_message(myUser.id, "And here they are on a map :)")
-                                #sendImage
-                                send_message_image(myUser.id, mapurl)
+                                    mapurl = "https://maps.googleapis.com/maps/api/staticmap?center="+str(latitude)+","+str(longitude)+"&markers=color:green%7C"+str(latitude)+","+str(longitude)+"&key="+googleApiKey+"&size=800x800"
+                                    for y in range(0,maxi):
+                                        mapurl = mapurl +"&markers=color:red%7Clabel:H%7C"+str(latitudes[y])+","+str(longitudes[y])
+                                    send_message(myUser.id, "And here they are on a map :)")
+                                    #sendImage
+                                    send_message_image(myUser.id, mapurl)
                             elif attach["type"] == "image":
                                 image_url = attach["payload"]["url"]
                                 message = image_url#.replace("/p100x100/","/p200x200/")
@@ -403,12 +456,12 @@ def init_buttom_template(userTemplate):
                         {
                         'type': 'postback',
                         'title': 'Symptom checker',
-                        'payload': 'In order to properly help you, I will need to ask you a few questions. What symptoms do you have?'
+                        'payload': 'SymptomChecker:In order to properly help you, I will need to ask you a few questions. What symptoms do you have?'
                         },
                         {
                         'type': 'postback',
                         'title': 'Health alerts',
-                        'payload': 'Which diseases and/or symptoms would you like to check in your local area?'
+                        'payload': 'HealthAlerts:Which diseases and/or symptoms would you like to check in your local area?'
                         }
 #                               {
 #                               "type":"web_url",
@@ -431,6 +484,91 @@ def init_buttom_template(userTemplate):
         log(r.status_code)
         log(r.text)
 
+    log(r.text)
+
+def hospital_buttom_template(sender_id, hospitals_distance_duration_latitude_longitude):
+    
+    message = str(hospitals_distance_duration_latitude_longitude[0][0]) + " \n\tDistance : " + str(hospitals_distance_duration_latitude_longitude[1]) + " \n\tDuration : " + str(hospitals_distance_duration_latitude_longitude[2])
+
+    log("Sending button template to {recipient}.".format(recipient=sender_id))
+
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+        }
+    headers = {
+        "Content-Type": "application/json"
+        }
+    data = json.dumps({
+        "recipient": {
+            "id": sender_id
+        },
+        "message":{
+            "attachment":{
+                "type":"template",
+                "payload":{
+                      "template_type":"button",
+                      "text": message,
+                      "buttons":[
+                             {
+                             'type': 'postback',
+                             'title': 'Discounts',
+                             'payload': "Discounts:"+str(hospitals_distance_duration_latitude_longitude[0][0]) + "\n" + str(hospitals_distance_duration_latitude_longitude[0][1])
+                             },
+                             {
+                             'type': 'web_url',
+                             'title': 'Show Website',
+                             'url': str(hospitals_distance_duration_latitude_longitude[0][3])
+                             }
+                    ]
+                }
+            }
+        }
+    })
+    r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+                          
+    log(r.text)
+
+def map_template(sender_id, title, lat, long, subtitle):
+    
+    
+    log("Sending map template to {recipient}.".format(recipient=sender_id))
+    
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = json.dumps({
+                  "recipient": {
+                  "id": sender_id
+                  },
+                  "message":{
+                  "attachment":{
+                  "type":"template",
+                  "payload":{
+                  "template_type":"generic",
+                    "elements":
+                      [
+                             {
+                             'title': str(title),
+                             'image_url': "https://maps.googleapis.com/maps/api/staticmap?size=764x400&center="+str(lat)+","+str(long)+"&zoom=25&markers="+str(lat)+","+str(long)+"&key="+googleApiKey,
+                             'item_url': "https://maps.apple.com/maps?q="+str(lat)+","+str(long)+"&z=16",
+                             'subtitle': str(subtitle)
+                            }
+                      ]
+                }
+            }
+        }
+    })
+    r = requests.post("https://graph.facebook.com/v2.8/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+    
     log(r.text)
 
 

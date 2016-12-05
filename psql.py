@@ -216,3 +216,29 @@ def update_user(id, user):
             conn.close()
 
     return updated_rows
+
+
+def get_hospitals(district):
+    """ query data from the hospitals table """
+    conn = None
+    Hospitals = []
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute("select hospital_name,total_discount_offer,address,web_address,latitude,longitude FROM hospitals where district = '"+str(district)+"';")
+        print("The number of Hospitals: ", cur.rowcount)
+        row = cur.fetchone()
+        
+        while row is not None:
+            print(row)
+            Hospitals.append(row)
+            row = cur.fetchone()
+        
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("sql get_hospitals error : " + str(error))
+    finally:
+        if conn is not None:
+            conn.close()
+    return Hospitals
