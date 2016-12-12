@@ -4,6 +4,7 @@ import json
 import requests
 import urllib, json
 import infermedica_api
+import psql
 api = infermedica_api.API(app_id='21794b8d', app_key='81f5f69f0cc9d2defaa3c722c0e905bf')
 #print(api.info())
 
@@ -12,26 +13,25 @@ class MyUser:
     def __init__(self):
 #        self.data = []
         self.id = None
-        self.symptom = None
-        self.gender = None
+        self.symptom = 'empty'
+        self.gender = 'empty'
         self.age = None
-        self.diagnosis = None
-        self.first_name = None
-        self.last_name = None
-        self.profile_pic = None
+        self.diagnosis = 'empty'
+        self.first_name = 'empty'
+        self.last_name = 'empty'
+        self.profile_pic = 'empty'
+        self.question_count = 0
 
 
-def CheckUser(userID, usersList):
-    for user in usersList:
-        if user.id == userID:
-            return True
-    return False
+def CheckUser(userID):
+    row_count = psql.is_user_available(userID)
+    if row_count == 1:
+        return True
+    else:
+        return False
 
-def GetUser(userID, usersList):
-    for user in usersList:
-        if user.id == userID:
-            return user
-    return MyUser()
+def GetUser(userID):
+    return psql.get_user(userID)
 
 def CreateUser(userID):
     newUser = MyUser()
@@ -42,23 +42,28 @@ def CreateUser(userID):
     try:
         newUser.first_name = str(r.json()["first_name"])
     except:
-        newUser.first_name = ""
+        newUser.first_name = "empty"
     try:
         newUser.last_name = str(r.json()["last_name"])
     except:
-        newUser.last_name = ""
+        newUser.last_name = "empty"
     try:
         newUser.gender = str(r.json()["gender"])
     except:
-        newUser.gender = "male"
+        newUser.gender = "empty"
     try:
         newUser.profile_pic = str(r.json()["profile_pic"])
     except:
-        newUser.profile_pic = ""
+        newUser.profile_pic = "empty"
 
+    newUser.symptom = "empty"
+    newUser.diagnosis = "empty"
     newUser.age = 40  #Need to be impliment
-
-    return newUser
+    newUser.question_count = 0;
+    
+    psql.insert_user(newUser)
+    
+    return psql.get_user(newUser.id)
 
 
 def RemoveUser(user, usersList):
