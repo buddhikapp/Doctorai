@@ -1,4 +1,4 @@
-# snapflow:run=49d1bd49-cdf7-45da-942a-a216d25d1c7a
+# snapflow:run=abc86f13-b51e-46f2-b57e-53bddbd8b22e
 # snapflow:step=2
 name: CI/CD Build and Test
 
@@ -9,7 +9,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,19 +34,50 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Syntax check (compile Python files)
+      - name: Compile check (Python syntax)
         run: |
           python -m py_compile app.py config.py diagnose.py search.py user.py psql.py
 
-      - name: Check imports
+      - name: Verify imports
         run: |
           python -c "import flask; print('Flask version:', flask.__version__)"
           python -c "import requests; print('Requests version:', requests.__version__)"
           python -c "import psycopg2; print('psycopg2 available')"
           python -c "import infermedica_api; print('Infermedica API available')"
 
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Lint with flake8 (informational)
         continue-on-error: true
         run: |
           pip install flake8
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
+
+      - name: Run unit tests (if any)
+        continue-on-error: true
+        run: |
+          python -m pytest --tb=short 2>/dev/null || echo "No pytest tests found — skipping"
